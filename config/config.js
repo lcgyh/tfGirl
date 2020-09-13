@@ -102,6 +102,32 @@ export default defineConfig({
 
               ]
             },
+
+            {
+
+              name: 'goods',
+              icon: 'table',
+              path: '/goods',
+              routes: [{
+                  path: '/goods',
+                  redirect: '/goods/list'
+                },
+                {
+                  path: '/goods/list',
+                  name: 'goodsList',
+                  icon: 'smile',
+                  component: './goods/list',
+                },
+                {
+                  path: '/goods/list/create',
+                  name: 'goodsCreate',
+                  component: './goods/list/create',
+                  hideInMenu: true
+                }
+              ]
+
+            },
+
             {
               component: './404',
             },
