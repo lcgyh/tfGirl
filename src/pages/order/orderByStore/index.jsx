@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Table } from 'antd';
+import { useHistory } from "react-router-dom";
+import { Card, Table, Space, Button } from 'antd';
 import SearchList from './components/search'
+import Delivery from './components/delivery'
 import { columns } from './conf'
 import './style.less'
 
+
+
 const OrderByStore = () => {
+  const history = useHistory();
+
   const [searchParam, setSearchParam] = useState({})
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [selectedRows, setSelectedRows] = useState([])
   const [pagination, setPagination] = useState({
     pageSize: 10,
     current: 1,
@@ -27,6 +35,11 @@ const OrderByStore = () => {
     }
   ])
 
+  const [visibleData, setVisibleData] = useState({
+    visible: false,
+    record: {}
+  })
+
   // 查询列表
   const getDataList = (formData = {}, page = {}) => {
     const param = {
@@ -45,17 +58,53 @@ const OrderByStore = () => {
   useEffect(() => {
     // getDataList()
   }, [])
+
+  const goInfo = (data) => {
+    console.log('data', data)
+    history.push('/order/store/info')
+  }
+
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys)
+      setSelectedRows(selectedRows)
+    },
+    getCheckboxProps: record => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name,
+    }),
+  };
+
+
   return (
     <PageContainer>
       <SearchList getDataList={getDataList} />
-      <Card className='table-con' title='查询列表'>
+      <Card className='table-con' title='查询列表' extra={
+        <div>
+          <Space>
+            <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>发货</Button>
+            <Button type="primary">补充快递单</Button>
+          </Space>
+        </div>
+      }>
         <Table
-          dataSource={dataSource}
+          dataSource={dataSource.map((item, index) => {
+            return {
+              ...item,
+              goInfo,
+              key: index
+            }
+          })}
           columns={columns}
           bordered
           onChange={onChange}
+          rowSelection={{
+            ...rowSelection,
+          }}
           pagination={pagination} />;
       </Card>
+      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
     </PageContainer>
   )
 }

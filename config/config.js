@@ -67,17 +67,40 @@ export default defineConfig({
                 authority: ['admin'],
               }, ],
             },
-            {
-              name: 'list.table-list',
-              icon: 'table',
-              path: '/list',
-              component: './ListTableList',
-            },
+            // {
+            //   name: 'list.table-list',
+            //   icon: 'table',
+            //   path: '/list',
+            //   component: './ListTableList',
+            // },
+            // {
+            //   name: 'order',
+            //   icon: 'table',
+            //   path: '/order',
+            //   redirect: '/order/store',
+            // },
             {
               name: 'order',
               icon: 'table',
               path: '/order',
-              component: './order/orderByStore',
+              routes: [{
+                  path: '/order',
+                  redirect: '/order/store'
+                },
+                {
+                  path: '/order/store',
+                  name: 'orderStore',
+                  icon: 'smile',
+                  component: './order/orderByStore',
+                },
+                {
+                  path: '/order/store/info',
+                  name: 'orderStoreInfo',
+                  component: './order/orderByStore/info',
+                  hideInMenu: true
+                }
+
+              ]
             },
             {
               component: './404',
