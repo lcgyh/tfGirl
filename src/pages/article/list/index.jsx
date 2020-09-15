@@ -62,17 +62,21 @@ const OrderByStore = () => {
     history.push('/order/store/info');
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
+  const goCreate = (key) => {
+    if (key === '1') {
+      history.push('/article/createArticle');
+    }
+    if (key === '2') {
+      history.push('/article/createVoice');
+    }
+    if (key === '3') {
+      history.push('/article/createVideo');
+    }
+    if (key === '4') {
+      history.push('/article/createWeChat');
+    }
+
+  }
 
   return (
     <PageContainer>
@@ -83,10 +87,12 @@ const OrderByStore = () => {
         extra={
           <div>
             <Space>
-              <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>
-                发货
+              <Button type="primary" onClick={() => goCreate('1')}>
+                新增文章言语
               </Button>
-              <Button type="primary">补充快递单</Button>
+              <Button type="primary" onClick={() => goCreate('2')}>新增语音言语</Button>
+              <Button type="primary" onClick={() => goCreate('3')}>新增视频言语</Button>
+              <Button type="primary" onClick={() => goCreate('4')}>新增公众号言语</Button>
             </Space>
           </div>
         }
@@ -102,9 +108,7 @@ const OrderByStore = () => {
           columns={columns}
           bordered
           onChange={onChange}
-          rowSelection={{
-            ...rowSelection,
-          }}
+
           pagination={pagination}
         />
       </Card>

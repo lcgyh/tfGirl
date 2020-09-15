@@ -1,6 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Table, Space, Button } from 'antd';
-import { logColumns } from './conf';
+import React, {
+  useState,
+  useEffect
+} from 'react';
+import {
+  Card,
+  Table,
+  Space,
+  Button
+} from 'antd';
+import {
+  PageContainer
+} from '@ant-design/pro-layout';
+import {
+  logColumns
+} from './conf';
 
 const GoodsLog = () => {
   const [pagination, setPagination] = useState({
@@ -10,16 +23,27 @@ const GoodsLog = () => {
   });
   const [dataSource, setDataSource] = useState([]);
   const onChange = () => {};
-  return (
-    <Card>
-      <Table
-        dataSource={dataSource}
-        columns={logColumns}
-        bordered
-        onChange={onChange}
-        pagination={pagination}
-      />
-    </Card>
+  return ( <
+    PageContainer >
+    <
+    Card >
+    <
+    Table dataSource = {
+      dataSource
+    }
+    columns = {
+      logColumns
+    }
+    bordered onChange = {
+      onChange
+    }
+    pagination = {
+      pagination
+    }
+    /> < /
+    Card >
+    <
+    /PageContainer>
   );
 };
 

@@ -1,71 +1,79 @@
-const orderStates = [
-  {
-    name: '待支付',
-    value: '1',
-  },
-];
+const orderStates = [{
+  name: '待支付',
+  value: '1',
+}, ];
 
-const columns = [
-  {
-    title: '订单号',
+const columns = [{
+    title: '言语ID',
     dataIndex: 'name',
     key: 'name',
     align: 'center',
-    render: (text, record) => (
-      <span
-        style={{
+    render: (text, record) => ( <
+      span style = {
+        {
           color: '#1890ff',
           cursor: 'pointer',
-        }}
-        onClick={() => {
+        }
+      }
+      onClick = {
+        () => {
           record.goInfo(record);
-        }}
-      >
-        {' '}
-        {text}{' '}
-      </span>
+        }
+      } > {
+        ' '
+      } {
+        text
+      } {
+        ' '
+      } <
+      /span>
     ),
   },
   {
-    title: '门店名称',
+    title: '言语标题',
     dataIndex: 'age',
     key: 'age',
     align: 'center',
   },
   {
-    title: '品牌',
+    title: '言语类型',
     dataIndex: 'address',
     key: 'address',
     align: 'center',
   },
   {
-    title: '订单金额',
+    title: '展示门店',
     dataIndex: 'address1',
     key: 'address1',
     align: 'center',
   },
   {
-    title: '订单状态',
+    title: '状态',
     dataIndex: 'address12',
     key: 'address12',
     align: 'center',
   },
   {
-    title: '下单时间',
+    title: '创建时间',
     dataIndex: 'address13',
     key: 'address13',
     align: 'center',
   },
   {
-    title: '发货时间',
+    title: '操作',
     dataIndex: 'address14',
     key: 'address14',
     align: 'center',
+    render: () => < span style = {
+      {
+        color: '#1890ff',
+        cursor: 'pointer',
+      }
+    } > 操作 < /span>
   },
 ];
 
-const goodsColumns = [
-  {
+const goodsColumns = [{
     title: '商品名称',
     dataIndex: 'address13',
     key: 'address13',
@@ -103,8 +111,7 @@ const goodsColumns = [
   },
 ];
 
-const opaColumns = [
-  {
+const opaColumns = [{
     title: '操作',
     dataIndex: 'address13',
     key: 'address13',
@@ -124,4 +131,9 @@ const opaColumns = [
   },
 ];
 
-export { orderStates, columns, goodsColumns, opaColumns };
+export {
+  orderStates,
+  columns,
+  goodsColumns,
+  opaColumns
+};

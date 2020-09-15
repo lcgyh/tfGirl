@@ -52,9 +52,12 @@ export default {
   'menu.order': '订单中心',
   'menu.order.orderStore': '门店订单',
   'menu.order.orderStoreInfo': '订单详情',
-
   'menu.goods': '商品中心',
   'menu.goods.goodsList': '商品管理',
+  'menu.goods.goodsCreate': '新建商品',
+  'menu.goods.goodsEdit': '商品编辑',
+  'menu.goods.goodsInfo': '商品详情',
+  'menu.goods.goodsLog': '商品日志',
   'menu.goods.inventory': '商品库存',
   'menu.goods.specs': '规格管理',
   'menu.goods.brand': '品牌管理',
@@ -62,7 +65,7 @@ export default {
   'menu.goods.classify': '分类管理',
   'menu.cooperation': '合作中心',
   'menu.cooperation.storeCenter': '门店管理',
-
+  'menu.cooperation.storeCreate': '新建门店',
   'menu.activity': '活动中心',
   'menu.activity.banner': 'banner管理',
   'menu.activity.seckill': '秒杀活动',

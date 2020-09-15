@@ -62,17 +62,10 @@ const OrderByStore = () => {
     history.push('/order/store/info');
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
+  const goCreate = () => {
+    history.push('/cooperation/store/create');
+  }
+
 
   return (
     <PageContainer>
@@ -83,10 +76,10 @@ const OrderByStore = () => {
         extra={
           <div>
             <Space>
-              <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>
-                发货
+              <Button type="primary" onClick={() => goCreate()}>
+                新家门店
               </Button>
-              <Button type="primary">补充快递单</Button>
+
             </Space>
           </div>
         }
@@ -102,9 +95,7 @@ const OrderByStore = () => {
           columns={columns}
           bordered
           onChange={onChange}
-          rowSelection={{
-            ...rowSelection,
-          }}
+
           pagination={pagination}
         />
       </Card>

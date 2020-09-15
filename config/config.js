@@ -1,8 +1,12 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
+import {
+  defineConfig
+} from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
-const { REACT_APP_ENV } = process.env;
+const {
+  REACT_APP_ENV
+} = process.env;
 export default defineConfig({
   hash: true,
   antd: {},
@@ -23,28 +27,23 @@ export default defineConfig({
     ie: 11,
   },
   // umi routes: https://umijs.org/docs/routing
-  routes: [
-    {
+  routes: [{
       path: '/user',
       component: '../layouts/UserLayout',
-      routes: [
-        {
-          name: 'login',
-          path: '/user/login',
-          component: './user/login',
-        },
-      ],
+      routes: [{
+        name: 'login',
+        path: '/user/login',
+        component: './user/login',
+      }, ],
     },
     {
       path: '/',
       component: '../layouts/SecurityLayout',
-      routes: [
-        {
+      routes: [{
           path: '/',
           component: '../layouts/BasicLayout',
           authority: ['admin', 'user'],
-          routes: [
-            {
+          routes: [{
               path: '/',
               redirect: '/welcome',
             },
@@ -58,8 +57,7 @@ export default defineConfig({
               name: 'order',
               icon: 'table',
               path: '/order',
-              routes: [
-                {
+              routes: [{
                   path: '/order',
                   redirect: '/order/store',
                 },
@@ -81,8 +79,7 @@ export default defineConfig({
               name: 'goods',
               icon: 'table',
               path: '/goods',
-              routes: [
-                {
+              routes: [{
                   path: '/goods',
                   redirect: '/goods/list',
                 },
@@ -100,19 +97,19 @@ export default defineConfig({
                 },
                 {
                   path: '/goods/info',
-                  name: 'goodsCreate',
+                  name: 'goodsInfo',
                   component: './goods/list/info',
                   hideInMenu: true,
                 },
                 {
                   path: '/goods/log',
-                  name: 'goodsCreate',
+                  name: 'goodsLog',
                   component: './goods/list/log',
                   hideInMenu: true,
                 },
                 {
                   path: '/goods/edit',
-                  name: 'goodsCreate',
+                  name: 'goodsEdit',
                   component: './goods/list/create',
                   hideInMenu: true,
                 },
@@ -154,8 +151,7 @@ export default defineConfig({
               name: 'cooperation',
               icon: 'table',
               path: '/cooperation',
-              routes: [
-                {
+              routes: [{
                   path: '/cooperation',
                   redirect: '/cooperation/store',
                 },
@@ -163,7 +159,13 @@ export default defineConfig({
                   path: '/cooperation/store',
                   name: 'storeCenter',
                   icon: 'smile',
-                  component: './goods/list',
+                  component: './cooperation/store',
+                },
+                {
+                  path: '/cooperation/store/create',
+                  name: 'storeCreate',
+                  hideInMenu: true,
+                  component: './cooperation/store/create',
                 },
               ],
             },
@@ -171,8 +173,7 @@ export default defineConfig({
               name: 'activity',
               icon: 'table',
               path: '/activity',
-              routes: [
-                {
+              routes: [{
                   path: '/activity',
                   redirect: '/activity/banner',
                 },
@@ -203,8 +204,7 @@ export default defineConfig({
               name: 'article',
               icon: 'table',
               path: '/article',
-              routes: [
-                {
+              routes: [{
                   path: '/article',
                   redirect: '/article/list',
                 },
@@ -213,6 +213,30 @@ export default defineConfig({
                   name: 'articleList',
                   icon: 'smile',
                   component: './article/list',
+                },
+                {
+                  path: '/article/createArticle',
+                  name: 'createArticle',
+                  hideInMenu: true,
+                  component: './article/list/createArticle',
+                },
+                {
+                  path: '/article/createVideo',
+                  name: 'createVideo',
+                  hideInMenu: true,
+                  component: './article/list/createVideo',
+                },
+                {
+                  path: '/article/createVoice',
+                  name: 'createVoice',
+                  hideInMenu: true,
+                  component: './article/list/createVoice',
+                },
+                {
+                  path: '/article/createWeChat',
+                  name: 'createWeChat',
+                  hideInMenu: true,
+                  component: './article/list/createWeChat',
                 },
               ],
             },
