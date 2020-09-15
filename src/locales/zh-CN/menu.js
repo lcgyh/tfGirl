@@ -52,4 +52,23 @@ export default {
   'menu.order': '订单中心',
   'menu.order.orderStore': '门店订单',
   'menu.order.orderStoreInfo': '订单详情',
+
+  'menu.goods': '商品中心',
+  'menu.goods.goodsList': '商品管理',
+  'menu.goods.inventory': '商品库存',
+  'menu.goods.specs': '规格管理',
+  'menu.goods.brand': '品牌管理',
+  'menu.goods.country': '国家管理',
+  'menu.goods.classify': '分类管理',
+  'menu.cooperation': '合作中心',
+  'menu.cooperation.storeCenter': '门店管理',
+
+  'menu.activity': '活动中心',
+  'menu.activity.banner': 'banner管理',
+  'menu.activity.seckill': '秒杀活动',
+  'menu.activity.new': '上新活动',
+  'menu.activity.hot': '热销活动',
+
+  'menu.article': '妈妈言语',
+  'menu.article.articleList': '言语记录',
 };

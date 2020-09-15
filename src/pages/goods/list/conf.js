@@ -1,23 +1,20 @@
-import {
-  Divider
-} from 'antd'
+import { Divider } from 'antd';
 
-const orderStates = [{
-  name: '待支付',
-  value: '1'
-}]
+const orderStates = [
+  {
+    name: '待支付',
+    value: '1',
+  },
+];
 
-const columns = [{
+const columns = [
+  {
     title: 'SKU图片',
     dataIndex: 'name',
     width: '10%',
     key: 'name',
     align: 'center',
-    render: (text, record) =>
-      <
-      span > {
-        text
-      } < /span>
+    render: (text, record) => <span> {text} </span>,
   },
   {
     title: 'SPUID',
@@ -103,98 +100,158 @@ const columns = [{
     align: 'center',
     width: '13%',
     render: (text, record) => {
-      return ( <
-        div >
-        <
-        span style = {
-          {
-            color: "#1890ff",
-            cursor: 'pointer'
-          }
-        } > 编辑 < /span> <
-        Divider type = "vertical" / >
-        <
-        span style = {
-          {
-            color: "#1890ff",
-            cursor: 'pointer'
-          }
-        } > 详情 < /span> <
-        Divider type = "vertical" / >
-        <
-        span style = {
-          {
-            color: "#1890ff",
-            cursor: 'pointer'
-          }
-        } > 日志 < /span> < /
-        div >
-      )
-    }
-  }
+      return (
+        <div>
+          <span
+            style={{
+              color: '#1890ff',
+              cursor: 'pointer',
+            }}
+            onClick={() => record.goEdit()}
+          >
+            {' '}
+            编辑{' '}
+          </span>{' '}
+          <Divider type="vertical" />
+          <span
+            style={{
+              color: '#1890ff',
+              cursor: 'pointer',
+            }}
+            onClick={() => record.goInfo()}
+          >
+            {' '}
+            详情{' '}
+          </span>{' '}
+          <Divider type="vertical" />
+          <span
+            style={{
+              color: '#1890ff',
+              cursor: 'pointer',
+            }}
+            onClick={() => record.goLog()}
+          >
+            {' '}
+            日志{' '}
+          </span>{' '}
+        </div>
+      );
+    },
+  },
 ];
 
-const goodsColumns = [{
+const goodsColumns = [
+  {
     title: '商品名称',
     dataIndex: 'address13',
     key: 'address13',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '规格',
     dataIndex: 'address14',
     key: 'address14',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '商品条码',
     dataIndex: 'addresss',
     key: 'address14',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '预订数量',
     dataIndex: 'addre1ss',
     key: 'address14',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '零售价',
     dataIndex: 'address1',
     key: 'address14',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '折扣价',
     dataIndex: 'address11',
     key: 'address14',
-    align: 'center'
-  }
-]
+    align: 'center',
+  },
+];
 
-const opaColumns = [{
+const opaColumns = [
+  {
     title: '操作',
     dataIndex: 'address13',
     key: 'address13',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '操作时间',
     dataIndex: 'address14',
     key: 'address141',
-    align: 'center'
+    align: 'center',
   },
   {
     title: '操作人',
     dataIndex: 'addresss',
     key: 'address14',
-    align: 'center'
-  }
-]
+    align: 'center',
+  },
+];
 
-export {
-  orderStates,
-  columns,
-  goodsColumns,
-  opaColumns
-}
+const goodsInfoColumns = [
+  {
+    title: '商品条码',
+    dataIndex: 'addresss',
+    key: 'address14',
+    align: 'center',
+  },
+  {
+    title: '供货价',
+    dataIndex: 'address141',
+    key: 'address141',
+    align: 'center',
+  },
+  {
+    title: '零售价',
+    dataIndex: 'address142',
+    key: 'address142',
+    align: 'center',
+  },
+  {
+    title: '商品图片',
+    dataIndex: 'address143',
+    key: 'address143',
+    align: 'center',
+  },
+];
+
+const logColumns = [
+  {
+    title: '操作类型',
+    dataIndex: 'addresss',
+    key: 'address14',
+    align: 'center',
+  },
+  {
+    title: '操作描述',
+    dataIndex: 'address141',
+    key: 'address141',
+    align: 'center',
+  },
+  {
+    title: '操作时间',
+    dataIndex: 'address142',
+    key: 'address142',
+    align: 'center',
+  },
+  {
+    title: '操作人',
+    dataIndex: 'address143',
+    key: 'address143',
+    align: 'center',
+  },
+];
+
+export { orderStates, columns, goodsColumns, opaColumns, goodsInfoColumns, logColumns };

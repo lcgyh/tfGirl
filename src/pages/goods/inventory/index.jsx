@@ -7,8 +7,9 @@ import Delivery from './components/delivery';
 import { columns } from './conf';
 import './style.less';
 
-const GoodsList = () => {
+const OrderByStore = () => {
   const history = useHistory();
+
   const [searchParam, setSearchParam] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -56,6 +57,11 @@ const GoodsList = () => {
     // getDataList()
   }, []);
 
+  const goInfo = (data) => {
+    console.log('data', data);
+    history.push('/order/store/info');
+  };
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKeys(selectedRowKeys);
@@ -68,20 +74,6 @@ const GoodsList = () => {
     }),
   };
 
-  const goGoCreate = () => {
-    history.push('/goods/create');
-  };
-
-  const goInfo = () => {
-    history.push('/goods/info');
-  };
-  const goEdit = () => {
-    history.push('/goods/edit');
-  };
-  const goLog = () => {
-    history.push('/goods/log');
-  };
-
   return (
     <PageContainer>
       <SearchList getDataList={getDataList} />
@@ -91,13 +83,9 @@ const GoodsList = () => {
         extra={
           <div>
             <Space>
-              <Button type="primary" onClick={() => goGoCreate()}>
-                新增商品
+              <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>
+                库存增减
               </Button>
-              <Button type="primary">SPU售卖</Button>
-              <Button type="primary">SPU停卖</Button>
-              <Button type="primary">SKU上线</Button>
-              <Button type="primary">SKU下线</Button>
             </Space>
           </div>
         }
@@ -107,15 +95,12 @@ const GoodsList = () => {
             return {
               ...item,
               goInfo,
-              goEdit,
-              goLog,
               key: index,
             };
           })}
           columns={columns}
           bordered
           onChange={onChange}
-          scroll={{ x: 1600 }}
           rowSelection={{
             ...rowSelection,
           }}
@@ -127,4 +112,4 @@ const GoodsList = () => {
   );
 };
 
-export default GoodsList;
+export default OrderByStore;
