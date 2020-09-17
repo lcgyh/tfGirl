@@ -1,3 +1,5 @@
+import React from 'react';
+
 const orderStates = [
   {
     name: '待支付',
@@ -7,62 +9,45 @@ const orderStates = [
 
 const columns = [
   {
-    title: '订单号',
+    title: '热销ID',
     dataIndex: 'name',
     key: 'name',
     align: 'center',
-    render: (text, record) => (
-      <span
-        style={{
-          color: '#1890ff',
-          cursor: 'pointer',
-        }}
-        onClick={() => {
-          record.goInfo(record);
-        }}
-      >
-        {' '}
-        {text}{' '}
-      </span>
-    ),
   },
   {
-    title: '门店名称',
+    title: '活动名称',
     dataIndex: 'age',
     key: 'age',
     align: 'center',
   },
   {
-    title: '品牌',
+    title: 'SPUID',
     dataIndex: 'address',
     key: 'address',
     align: 'center',
   },
   {
-    title: '订单金额',
+    title: '商品名称',
     dataIndex: 'address1',
     key: 'address1',
     align: 'center',
   },
   {
-    title: '订单状态',
+    title: '状态',
     dataIndex: 'address12',
     key: 'address12',
     align: 'center',
   },
   {
-    title: '下单时间',
-    dataIndex: 'address13',
-    key: 'address13',
-    align: 'center',
-  },
-  {
-    title: '发货时间',
+    title: '操作',
     dataIndex: 'address14',
     key: 'address14',
     align: 'center',
-  },
-];
+    render:()=><span style={{
+      color: '#1890ff',
+      cursor: 'pointer',
+    }}>操作</span>
+  }];
 
 const goodsColumns = [
   {

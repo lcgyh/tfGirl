@@ -57,9 +57,9 @@ const OrderByStore = () => {
     // getDataList()
   }, []);
 
-  const goInfo = (data) => {
-    console.log('data', data);
-    history.push('/order/store/info');
+  const goCreate = (data) => {
+  
+    history.push('/activity/banner/create');
   };
 
   const rowSelection = {
@@ -83,10 +83,9 @@ const OrderByStore = () => {
         extra={
           <div>
             <Space>
-              <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>
-                发货
+              <Button type="primary" onClick={() => goCreate()}>
+                新增Banner
               </Button>
-              <Button type="primary">补充快递单</Button>
             </Space>
           </div>
         }
@@ -95,7 +94,7 @@ const OrderByStore = () => {
           dataSource={dataSource.map((item, index) => {
             return {
               ...item,
-              goInfo,
+              
               key: index,
             };
           })}

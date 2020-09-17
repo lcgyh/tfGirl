@@ -20,7 +20,7 @@ const SearchList = (props) => {
   return (
     <Card>
       <Space style={{ flexWrap: 'wrap' }}>
-        <FormItemBySelf label="门店名称" width="100">
+        <FormItemBySelf label="banner名称" width="100">
           <Input
             onChange={(e) => {
               onChange(e, 'storeName');
@@ -29,16 +29,8 @@ const SearchList = (props) => {
             className="itemLabel-input"
           />
         </FormItemBySelf>
-        <FormItemBySelf label="商品名称" width="100">
-          <Input
-            onChange={(e) => {
-              onChange(e, 'storeName');
-            }}
-            placeholder="请输入"
-            className="itemLabel-input"
-          />
-        </FormItemBySelf>
-        <FormItemBySelf label="品牌" width="100">
+        
+        <FormItemBySelf label="banner状态" width="100">
           <Select className="itemLabel-input" allowClear placeholder="请选择">
             {orderStates.map((item) => {
               return (
@@ -50,33 +42,8 @@ const SearchList = (props) => {
           </Select>
         </FormItemBySelf>
 
-        <FormItemBySelf label="订单号" width="100">
-          <Input
-            onChange={(e) => {
-              onChange(e, 'storeName');
-            }}
-            placeholder="请输入"
-            className="itemLabel-input"
-          />
-        </FormItemBySelf>
-        <FormItemBySelf label="订单状态" width="100">
-          <Select className="itemLabel-input" allowClear placeholder="请选择">
-            {orderStates.map((item) => {
-              return (
-                <Option value={item.value} key={item.value}>
-                  {item.name}
-                </Option>
-              );
-            })}
-          </Select>
-        </FormItemBySelf>
-        <FormItemBySelf label="下单时间" width="100">
-          <RangePicker showTime={{ format: 'HH:mm:ss' }} format="YYYY-MM-DD HH:mm:ss" />
-        </FormItemBySelf>
-
-        <FormItemBySelf label="发货时间" width="100">
-          <RangePicker showTime={{ format: 'HH:mm:ss' }} format="YYYY-MM-DD HH:mm:ss" />
-        </FormItemBySelf>
+      
+       
       </Space>
 
       <div className="search-btns">

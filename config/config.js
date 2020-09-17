@@ -184,9 +184,21 @@ export default defineConfig({
                   component: './activity/banner',
                 },
                 {
+                  path: '/activity/banner/create',
+                  name: 'createBanner',
+                  hideInMenu: true,
+                  component: './activity/banner/create',
+                },
+                {
                   path: '/activity/seckill',
                   name: 'seckill',
                   component: './activity/seckill',
+                },
+                {
+                  path: '/activity/seckill/create',
+                  name: 'createSeckill',
+                  hideInMenu: true,
+                  component: './activity/seckill/create',
                 },
                 {
                   path: '/activity/new',
@@ -194,9 +206,21 @@ export default defineConfig({
                   component: './activity/new',
                 },
                 {
+                  path: '/activity/new/create',
+                  name: 'createNew',
+                  hideInMenu: true,
+                  component: './activity/new/create',
+                },
+                {
                   path: '/activity/hot',
                   name: 'hot',
                   component: './activity/hot',
+                },
+                {
+                  path: '/activity/hot/create',
+                  name: 'createHot',
+                  hideInMenu: true,
+                  component: './activity/hot/create',
                 },
               ],
             },

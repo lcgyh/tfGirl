@@ -73,7 +73,9 @@ const OrderByStore = () => {
       name: record.name,
     }),
   };
-
+  const goCreate=()=>{
+    history.push('/activity/hot/create');
+  }
   return (
     <PageContainer>
       <SearchList getDataList={getDataList} />
@@ -83,10 +85,9 @@ const OrderByStore = () => {
         extra={
           <div>
             <Space>
-              <Button type="primary" onClick={() => setVisibleData({ visible: true, record: {} })}>
-                发货
+              <Button type="primary" onClick={() => goCreate()}>
+                新增热销活动
               </Button>
-              <Button type="primary">补充快递单</Button>
             </Space>
           </div>
         }

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Divider } from 'antd';
 
 const orderStates = [
@@ -103,21 +104,16 @@ const columns = [
       return (
         <div>
           <span
-            style={{
-              color: '#1890ff',
-              cursor: 'pointer',
-            }}
+          className='click_text'
+           
             onClick={() => record.goEdit()}
           >
-            {' '}
-            编辑{' '}
+            
+            编辑
           </span>{' '}
           <Divider type="vertical" />
           <span
-            style={{
-              color: '#1890ff',
-              cursor: 'pointer',
-            }}
+            className='click_text'
             onClick={() => record.goInfo()}
           >
             {' '}
@@ -125,10 +121,7 @@ const columns = [
           </span>{' '}
           <Divider type="vertical" />
           <span
-            style={{
-              color: '#1890ff',
-              cursor: 'pointer',
-            }}
+            className='click_text'
             onClick={() => record.goLog()}
           >
             {' '}

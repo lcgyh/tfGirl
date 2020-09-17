@@ -7,9 +7,41 @@ const orderStates = [
 
 const columns = [
   {
-    title: '订单号',
+    title: '上新ID',
     dataIndex: 'name',
     key: 'name',
+    align: 'center',
+    
+  },
+  {
+    title: '上新活动',
+    dataIndex: 'age',
+    key: 'age',
+    align: 'center',
+  },
+  {
+    title: 'SPUID',
+    dataIndex: 'address',
+    key: 'address',
+    align: 'center',
+  },
+  {
+    title: '商品名称',
+    dataIndex: 'address1',
+    key: 'address1',
+    align: 'center',
+  },
+  {
+    title: '状态',
+    dataIndex: 'address12',
+    key: 'address12',
+    align: 'center',
+  },
+ 
+  {
+    title: '操作',
+    dataIndex: 'address14',
+    key: 'address14',
     align: 'center',
     render: (text, record) => (
       <span
@@ -21,46 +53,9 @@ const columns = [
           record.goInfo(record);
         }}
       >
-        {' '}
-        {text}{' '}
+        编辑
       </span>
     ),
-  },
-  {
-    title: '门店名称',
-    dataIndex: 'age',
-    key: 'age',
-    align: 'center',
-  },
-  {
-    title: '品牌',
-    dataIndex: 'address',
-    key: 'address',
-    align: 'center',
-  },
-  {
-    title: '订单金额',
-    dataIndex: 'address1',
-    key: 'address1',
-    align: 'center',
-  },
-  {
-    title: '订单状态',
-    dataIndex: 'address12',
-    key: 'address12',
-    align: 'center',
-  },
-  {
-    title: '下单时间',
-    dataIndex: 'address13',
-    key: 'address13',
-    align: 'center',
-  },
-  {
-    title: '发货时间',
-    dataIndex: 'address14',
-    key: 'address14',
-    align: 'center',
   },
 ];
 
