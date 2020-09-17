@@ -2,7 +2,7 @@ import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, SelectLang, useIntl, connect } from 'umi';
 import React from 'react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import styles from './UserLayout.less';
 
 const UserLayout = (props) => {
@@ -34,11 +34,9 @@ const UserLayout = (props) => {
       </Helmet>
 
       <div className={styles.container}>
-        <div className={styles.lang}>
-          <SelectLang />
-        </div>
+
         <div className={styles.content}>
-          <div className={styles.top}>
+          {/* <div className={styles.top}>
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
@@ -46,10 +44,11 @@ const UserLayout = (props) => {
               </Link>
             </div>
             <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
-          </div>
+          </div> */}
           {children}
+          <div className={styles.content_r}>122</div>
         </div>
-        <DefaultFooter />
+
       </div>
     </HelmetProvider>
   );

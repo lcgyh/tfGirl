@@ -5,6 +5,7 @@ import { getFakeCaptcha } from '@/services/login';
 import ItemMap from './map';
 import LoginContext from './LoginContext';
 import styles from './index.less';
+
 const FormItem = Form.Item;
 
 const getFormItemOptions = ({ onChange, defaultValue, customProps = {}, rules }) => {
@@ -38,6 +39,7 @@ const LoginItem = (props) => {
     updateActive,
     type,
     tabUtil,
+    label,
     ...restProps
   } = props;
   const onGetCaptcha = useCallback(async (mobile) => {
@@ -110,7 +112,7 @@ const LoginItem = (props) => {
   }
 
   return (
-    <FormItem name={name} {...options}>
+    <FormItem name={name} {...options} label={label}>
       <Input {...customProps} {...otherProps} />
     </FormItem>
   );

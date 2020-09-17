@@ -10,6 +10,14 @@ body,
   filter: invert(80%);
 }
 
+.w100 {
+  width: 100%;
+}
+
+.h100 {
+  height: 100%;
+}
+
 .ant-layout {
   min-height: 100vh;
 }
@@ -30,9 +38,9 @@ ol {
 }
 
 
-.click_text{
-  color:#BC8D8F;
-  cursor:pointer
+.click_text {
+  color: #BC8D8F;
+  cursor: pointer
 }
 
 
@@ -40,12 +48,15 @@ ol {
   .ant-table {
     width: 100%;
     overflow-x: auto;
-    &-thead > tr,
-    &-tbody > tr {
-      > th,
-      > td {
+
+    &-thead>tr,
+    &-tbody>tr {
+
+      >th,
+      >td {
         white-space: pre;
-        > span {
+
+        >span {
           display: block;
         }
       }
@@ -54,8 +65,9 @@ ol {
 }
 
 // 兼容IE11
-@media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
-  body .ant-design-pro > .ant-layout {
+@media screen and(-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  body .ant-design-pro>.ant-layout {
     min-height: 100vh;
   }
 }

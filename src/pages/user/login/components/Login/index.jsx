@@ -55,6 +55,7 @@ const Login = (props) => {
     >
       <div className={classNames(className, styles.login)}>
         <Form
+          layout='vertical'
           form={props.from}
           onFinish={(values) => {
             if (props.onSubmit) {
@@ -78,8 +79,8 @@ const Login = (props) => {
               {otherChildren}
             </React.Fragment>
           ) : (
-            props.children
-          )}
+              props.children
+            )}
         </Form>
       </div>
     </LoginContext.Provider>
