@@ -1,40 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Divider } from 'antd';
+import React, {
+  useState,
+  useEffect
+} from 'react';
+import {
+  Divider
+} from 'antd';
 
-const orderStates = [
-  {
-    name: '待支付',
-    value: '1',
-  },
-];
+const orderStates = [{
+  name: '待支付',
+  value: '1',
+}, ];
 
-const columns = [
-  {
-    title: 'SKU图片',
+const columns = [{
+    title: 'skuPic',
     dataIndex: 'name',
     width: '10%',
     key: 'name',
     align: 'center',
-    render: (text, record) => <span> {text} </span>,
+    render: (text, record) => < span > {
+      text
+    } < /span>,
   },
   {
     title: 'SPUID',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'spuId',
+    key: 'spuId',
     align: 'center',
     width: '5%',
   },
   {
     title: 'SKUID',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'skuId',
+    key: 'skuId',
     align: 'center',
     width: '5%',
   },
   {
     title: '商品名称',
-    dataIndex: 'address1',
-    key: 'address1',
+    dataIndex: 'spuName',
+    key: 'spuName',
     align: 'center',
     width: '10%',
   },
@@ -54,29 +58,29 @@ const columns = [
   },
   {
     title: '品牌',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'brandName',
+    key: 'brandName',
     align: 'center',
     width: '10%',
   },
   {
     title: '供价',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'skuSupplyPrice',
+    key: 'skuSupplyPrice',
     align: 'center',
     width: '5%',
   },
   {
     title: '售价',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'skuRetailPrice',
+    key: 'skuRetailPrice',
     align: 'center',
     width: '5%',
   },
   {
     title: '库存',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'storeQty',
+    key: 'storeQty',
     align: 'center',
     width: '5%',
   },
@@ -89,52 +93,60 @@ const columns = [
   },
   {
     title: 'SKU状态',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'spuStatusStr',
+    key: 'spuStatusStr',
     align: 'center',
     width: '6%',
   },
   {
     title: '操作',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'opa',
+    key: 'opa',
     align: 'center',
     width: '13%',
     render: (text, record) => {
-      return (
-        <div>
-          <span
-          className='click_text'
-           
-            onClick={() => record.goEdit()}
-          >
-            
-            编辑
-          </span>{' '}
-          <Divider type="vertical" />
-          <span
-            className='click_text'
-            onClick={() => record.goInfo()}
-          >
-            {' '}
-            详情{' '}
-          </span>{' '}
-          <Divider type="vertical" />
-          <span
-            className='click_text'
-            onClick={() => record.goLog()}
-          >
-            {' '}
-            日志{' '}
-          </span>{' '}
-        </div>
+      return ( <
+        div >
+        <
+        span className = 'click_text'
+
+        onClick = {
+          () => record.goEdit()
+        } >
+
+        编辑 <
+        /span>{' '} <
+        Divider type = "vertical" / >
+        <
+        span className = 'click_text'
+        onClick = {
+          () => record.goInfo()
+        } > {
+          ' '
+        }
+        详情 {
+          ' '
+        } <
+        /span>{' '} <
+        Divider type = "vertical" / >
+        <
+        span className = 'click_text'
+        onClick = {
+          () => record.goLog()
+        } > {
+          ' '
+        }
+        日志 {
+          ' '
+        } <
+        /span>{' '} < /
+        div >
       );
     },
   },
 ];
 
-const goodsColumns = [
-  {
+const goodsColumns = [{
     title: '商品名称',
     dataIndex: 'address13',
     key: 'address13',
@@ -172,8 +184,7 @@ const goodsColumns = [
   },
 ];
 
-const opaColumns = [
-  {
+const opaColumns = [{
     title: '操作',
     dataIndex: 'address13',
     key: 'address13',
@@ -193,8 +204,7 @@ const opaColumns = [
   },
 ];
 
-const goodsInfoColumns = [
-  {
+const goodsInfoColumns = [{
     title: '商品条码',
     dataIndex: 'addresss',
     key: 'address14',
@@ -220,8 +230,7 @@ const goodsInfoColumns = [
   },
 ];
 
-const logColumns = [
-  {
+const logColumns = [{
     title: '操作类型',
     dataIndex: 'addresss',
     key: 'address14',
@@ -247,4 +256,11 @@ const logColumns = [
   },
 ];
 
-export { orderStates, columns, goodsColumns, opaColumns, goodsInfoColumns, logColumns };
+export {
+  orderStates,
+  columns,
+  goodsColumns,
+  opaColumns,
+  goodsInfoColumns,
+  logColumns
+};

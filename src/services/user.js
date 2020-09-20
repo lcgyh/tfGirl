@@ -1,10 +1,5 @@
-import request from '@/utils/request';
-export async function query() {
-  return request('/api/users');
-}
+import apiGetData from '@/utils/apiMeth'
+
 export async function queryCurrent() {
-  return request('/api/currentUser');
-}
-export async function queryNotices() {
-  return request('/api/notices');
+  return apiGetData('GET', '/erp/v1/userInfo');
 }

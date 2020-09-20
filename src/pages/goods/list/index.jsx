@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
 import { Card, Table, Space, Button } from 'antd';
+import apiGetData from '@/utils/apiMeth'
 import SearchList from './components/search';
 import Delivery from './components/delivery';
 import { columns } from './conf';
@@ -17,20 +18,7 @@ const GoodsList = () => {
     current: 1,
     total: 0,
   });
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ]);
+  const [dataSource, setDataSource] = useState([]);
 
   const [visibleData, setVisibleData] = useState({
     visible: false,
@@ -38,22 +26,29 @@ const GoodsList = () => {
   });
 
   // 查询列表
-  const getDataList = (formData = {}, page = {}) => {
+  const getDataList = async (formData = {}, page = {}) => {
     const param = {
       ...formData,
       pageSize: page.pageSize || 10,
       current: page.current || 1,
     };
+    const result = await apiGetData('GET', '/erp/v1/product', param)
+    const { list, pageSize, pageNum, total } = result
     // 请求数据
-    // setDataSource()
-    // setPagination()
-    // setSearchParam(查询参数)
+    setDataSource(list)
+    setPagination({
+      ...pagination,
+      total,
+      pageSize,
+      current: pageNum
+    })
+    setSearchParam(param)
   };
   const onChange = (page) => {
     getDataList(searchParam, page);
   };
   useEffect(() => {
-    // getDataList()
+    getDataList()
   }, []);
 
   const rowSelection = {

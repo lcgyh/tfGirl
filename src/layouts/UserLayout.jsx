@@ -3,6 +3,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Link, SelectLang, useIntl, connect } from 'umi';
 import React from 'react';
 import logo from '../assets/logo.png';
+import login_bg from '../assets/login_bg.png';
 import styles from './UserLayout.less';
 
 const UserLayout = (props) => {
@@ -46,7 +47,11 @@ const UserLayout = (props) => {
             <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
           </div> */}
           {children}
-          <div className={styles.content_r}>122</div>
+          <div className={styles.content_r}>
+            <div className={styles.logo_bg}>
+              <img alt="" className='w100 h100' src={login_bg} />
+            </div>
+          </div>
         </div>
 
       </div>

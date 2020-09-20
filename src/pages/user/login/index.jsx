@@ -29,7 +29,7 @@ const Login = (props) => {
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
-      payload: { ...values, type },
+      payload: { ...values },
     });
   };
 
@@ -41,7 +41,7 @@ const Login = (props) => {
           <UserName
             label='用户名'
             name="userName"
-            placeholder="用户名: admin or user"
+            placeholder="请输入手机号/账号"
             rules={[
               {
                 required: true,
@@ -51,8 +51,8 @@ const Login = (props) => {
           />
           <Password
             label='密码'
-            name="password"
-            placeholder="密码: ant.design"
+            name="passWord"
+            placeholder="请输入密码"
             rules={[
               {
                 required: true,

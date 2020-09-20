@@ -10,7 +10,7 @@ const proSettings = {
   menu: {
     locale: true,
   },
-  title: '商户管理系统',
+  title: '商户系统',
   pwa: false,
   iconfontUrl: '',
 };

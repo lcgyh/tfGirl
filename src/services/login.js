@@ -1,10 +1,9 @@
-import request from '@/utils/request';
+import apiGetData from '@/utils/apiMeth'
+
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
-    data: params,
-  });
+  return apiGetData('POST', '/erp/v1/login', params, true)
 }
-export async function getFakeCaptcha(mobile) {
-  return request(`/api/login/captcha?mobile=${mobile}`);
+
+export async function fakeAccountLogout(params) {
+  return apiGetData('POST', '/erp/v1/logout', params, true)
 }

@@ -7,8 +7,8 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'https://preview.pro.ant.design',
+    '/erp/': {
+      target: 'http://47.101.11.223:8607',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
