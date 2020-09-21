@@ -6,7 +6,8 @@ import {
 const apiGetData = async (method, url, params, isGetMsg = false) => {
   const result = await request(url, {
     method,
-    data: params,
+    params: method === 'GET' ? params : null,
+    data: method === 'GET' ? null : params,
   })
 
   if (result.code === 0 && isGetMsg === false) {
