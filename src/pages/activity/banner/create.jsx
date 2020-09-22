@@ -1,126 +1,161 @@
+
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {
-  Card,
-  Table,
-  Space,
-  Button,
-  Descriptions,
-  Form,
-  Input,
-  Checkbox,
-  Select,
-  Radio,
-  message,
-} from 'antd';
-import { cloneDeep } from 'lodash';
-import { useHistory } from 'react-router-dom';
-
-
-import { orderStates, goodsInfoColumns } from './conf';
-import PicturesWall from '../../../components/Upload';
-
-const { Option } = Select;
-const { TextArea } = Input;
+import { Card, Button, Form, Input, message, Radio } from 'antd';
+import { useHistory, useParams } from 'react-router-dom';
+import PicturesWall from '@/components/Upload';
+import { reqBannerInfo, reqEditBanner } from './service'
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  labelCol: {
+    span: 8
+  },
+  wrapperCol: {
+    span: 10
+  },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: {
+    offset: 8,
+    span: 16
+  },
 };
 
-const CreateGoods = () => {
+
+const CreateBanner = () => {
+  const [form] = Form.useForm();
+  const params = useParams();
   const history = useHistory();
-  const [dataSource, setDataSource] = useState([]);
-  const [goodsDes, setGoodsDes] = useState([
-    {
-      type: '1',
-      value: '122',
-    },
-    {
-      type: '2',
-      value: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
+  const { bannerId } = params
+  const [opType, setOpType] = useState(1)
+  const [fileImgs, setFileImgs] = useState([]);
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
-  const addDes = (type) => {
-    const list = cloneDeep(goodsDes);
-    list.push({
-      type,
-      value: '',
-    });
-    setGoodsDes(list);
-  };
-
-  const deleteDes = (index) => {
-    const list = cloneDeep(goodsDes);
-    if (list.length < 2) return message.error('至少保留一组不能删除');
-    list.splice(index, 1);
-    setGoodsDes(list);
-  };
 
   const goBack = () => {
     history.goBack();
   };
 
+  const onFinish = async (values) => {
+    const shopHeadPics = fileImgs.map((item) => {
+      return item.url
+    })
+    if (shopHeadPics.length < 1) return message.error('请上传banner图片')
+    const data = {
+      ...values,
+      opType,
+      bannerPic: shopHeadPics[0],
+    }
+    if (opType === 2) {
+      data.bannerId = bannerId
+    }
+    await reqEditBanner(data)
+    goBack()
+    message.error('操作成功')
+  };
+
+  const getStoreInfo = async () => {
+    const result = await reqBannerInfo(params)
+    setOpType(2)
+    form.setFieldsValue({
+      bannerName: result.bannerName,
+      bannerStatus: result.bannerStatus,
+      bannerRank: result.bannerRank,
+      spuId: result.spuId,
+      roomId: result.roomId,
+    });
+
+    if (result.bannerPic) {
+      setFileImgs([{
+        uid: '-1',
+        status: 'done',
+        url: result.bannerPic
+      }])
+    }
+  }
+
+  const formChange = (e, key) => {
+    form.setFieldsValue({
+      [key]: e && e.target ? e.target.value : e
+    });
+  }
+
+  const getFileListData = (data) => {
+    setFileImgs(data)
+  }
+
+  useEffect(() => {
+    if (!bannerId) return
+    getStoreInfo()
+  }, [bannerId])
+
   return (
-    <PageContainer>
+    <PageContainer >
       <Card>
-        <Form
-          {...layout}
+        <Form {...layout}
           name="basic"
-          initialValues={{ remember: true }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
         >
           <Form.Item
-            label="Banner名称"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
-          >
-            <Input placeholder="请输入" />
+            label="banner名称"
+            name="bannerName"
+            rules={
+              [{
+                required: true,
+                message: '请输入banner名称'
+              }]
+            } >
+            <Input
+              placeholder="请输入"
+              onChange={
+                (e) => {
+                  formChange(e, 'bannerName')
+                }
+              }
+            />
           </Form.Item>
-
-
-
           <Form.Item
-            label="Banner状态"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Radio.Group >
-              <Radio value={1}>上线</Radio>
-              <Radio value={2}>下线</Radio>
+            label="banner状态"
+            name="bannerStatus"
+            initialValue={1}
+            rules={
+              [{
+                required: true,
+                message: '请选择banner状态'
+              }]
+            } >
+            <Radio.Group
+              onChange={(e) => { formChange(e, 'bannerStatus') }} >
+              <Radio value={1} > 上线 </Radio>
+              <Radio value={2} > 下线 </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
-            label="Banner权重"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Input />
+            label="banner权重"
+            name="bannerRank"
+            rules={
+              [{
+                required: true,
+                message: '请输入联系人'
+              }]
+            } >
+            <Input
+              placeholder="请输入"
+              onChange={(e) => { formChange(e, 'bannerRank') }}
+            />
+          </Form.Item>
+          <Form.Item label="banner图片" >
+            <PicturesWall
+              fileImgs={fileImgs}
+              getFileListData={getFileListData}
+              imgLength={1}
+            />
           </Form.Item>
           <Form.Item
-            label="Banner图片"
+            label="链接类型"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <PicturesWall />
-          </Form.Item>
-
-          <Form.Item
-            label="Banner链接"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            onChange={(e) => { formChange(e, 'password') }}
+            rules={[{ required: true, message: '请选择banner链接类型' }]}
+            initialValue={1}
           >
             <Radio.Group >
               <Radio value={1}>商品</Radio>
@@ -129,25 +164,32 @@ const CreateGoods = () => {
           </Form.Item>
           <Form.Item
             label="SPUID"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            name="spuId"
+            rules={[{ required: true, message: '请输入SPUID' }]}
           >
-           <Input />
+            <Input
+              placeholder="请输入"
+              onChange={(e) => { formChange(e, 'spuId') }} />
           </Form.Item>
           <Form.Item
             label="直播间ID"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            name="roomId"
+            rules={[{ required: true, message: '请输入直播间ID' }]}
           >
-           <Input />
+            <Input placeholder="请输入"
+              onChange={(e) => { formChange(e, 'roomId') }} />
           </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
+          <Form.Item {...tailLayout} >
+            <Button
+              type="primary"
+              htmlType="submit" >
               提交
-            </Button>
-            <Button style={{ marginLeft: '20px' }} onClick={goBack}>
+              </Button>
+            <Button
+              style={{ marginLeft: '20px' }}
+              onClick={goBack} >
               返回
-            </Button>
+              </Button>
           </Form.Item>
         </Form>
       </Card>
@@ -155,4 +197,11 @@ const CreateGoods = () => {
   );
 };
 
-export default CreateGoods;
+export default CreateBanner;
+
+
+
+
+
+
+

@@ -1,123 +1,188 @@
-import React, { useState, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
+import React, {
+  useState,
+  useEffect
+} from 'react';
+import {
+  PageContainer
+} from '@ant-design/pro-layout';
 import {
   Card,
-  Table,
-  Space,
   Button,
-  Descriptions,
   Form,
   Input,
-  Checkbox,
-  Select,
-  Radio,
   message,
+  Radio
 } from 'antd';
-import { cloneDeep } from 'lodash';
-import { useHistory } from 'react-router-dom';
-
-
-import { orderStates, goodsInfoColumns } from './conf';
-import PicturesWall from '../../../components/Upload';
-
-const { Option } = Select;
-const { TextArea } = Input;
+import {
+  useHistory,
+  useParams
+} from 'react-router-dom';
+import {
+  reqNewInfo,
+  reqEditNew
+} from './service'
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  labelCol: {
+    span: 8
+  },
+  wrapperCol: {
+    span: 10
+  },
 };
 const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+  wrapperCol: {
+    offset: 8,
+    span: 16
+  },
 };
 
-const CreateGoods = () => {
+
+const CreateBanner = () => {
+  const [form] = Form.useForm();
+  const params = useParams();
   const history = useHistory();
-  const [dataSource, setDataSource] = useState([]);
-  const [goodsDes, setGoodsDes] = useState([
-    {
-      type: '1',
-      value: '122',
-    },
-    {
-      type: '2',
-      value: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
-  const addDes = (type) => {
-    const list = cloneDeep(goodsDes);
-    list.push({
-      type,
-      value: '',
-    });
-    setGoodsDes(list);
-  };
-
-  const deleteDes = (index) => {
-    const list = cloneDeep(goodsDes);
-    if (list.length < 2) return message.error('至少保留一组不能删除');
-    list.splice(index, 1);
-    setGoodsDes(list);
-  };
+  const {
+    newId
+  } = params
+  const [opType, setOpType] = useState(1)
 
   const goBack = () => {
     history.goBack();
   };
+  const onFinish = async (values) => {
+    const data = {
+      ...values,
+      opType,
+    }
+    if (opType === 2) {
+      data.newId = newId
+    }
+    await reqEditNew(data)
+    goBack()
+    message.error('操作成功')
+  };
 
-  return (
-    <PageContainer>
-      <Card>
-        <Form
-          {...layout}
-          name="basic"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
-          <Form.Item
-            label="活动名称"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
-          >
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item
-            label="活动商品"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-           <Input />
-          </Form.Item>
-          <Form.Item
-            label="活动状态"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <Radio.Group >
-              <Radio value={1}>上线</Radio>
-              <Radio value={2}>下线</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              提交
-            </Button>
-            <Button style={{ marginLeft: '20px' }} onClick={goBack}>
-              返回
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-    </PageContainer>
+  const gethotInfo = async () => {
+    const result = await reqNewInfo(params)
+    setOpType(2)
+    form.setFieldsValue({
+      newName: result.newName,
+      spuId: result.spuId,
+      newStatus: result.newStatus,
+    });
+  }
+
+  const formChange = (e, key) => {
+    form.setFieldsValue({
+      [key]: e && e.target ? e.target.value : e
+    });
+  }
+
+  useEffect(() => {
+    if (!newId) return
+    gethotInfo()
+  }, [newId])
+
+  return ( <
+    PageContainer >
+    <
+    Card >
+    <
+    Form {
+      ...layout
+    }
+    name = "basic"
+    onFinish = {
+      onFinish
+    } >
+    <
+    Form.Item label = "活动名称"
+    name = "newName"
+    rules = {
+      [{
+        required: true,
+        message: '请输入活动名称'
+      }]
+    } >
+    <
+    Input placeholder = "请输入"
+    onChange = {
+      (e) => {
+        formChange(e, 'newName')
+      }
+    }
+    />  < /
+    Form.Item >
+    <
+    Form.Item label = "活动商品(spuId)"
+    name = "spuId"
+    rules = {
+      [{
+        required: true,
+        message: '请输入活动商品'
+      }]
+    } >
+    <
+    Input placeholder = "请输入"
+    onChange = {
+      (e) => {
+        formChange(e, 'spuId')
+      }
+    }
+    /> < /
+    Form.Item >
+
+    <
+    Form.Item label = "活动状态"
+    name = "newStatus"
+    initialValue = {
+      1
+    }
+    rules = {
+      [{
+        required: true,
+        message: '请选择活动状态'
+      }]
+    } >
+    <
+    Radio.Group onChange = {
+      (e) => {
+        formChange(e, 'newStatus')
+      }
+    } >
+    <
+    Radio value = {
+      1
+    } > 上线 < /Radio> <
+    Radio value = {
+      2
+    } > 下线 < /Radio> < /
+    Radio.Group > <
+    /Form.Item> <
+    Form.Item {
+      ...tailLayout
+    } >
+    <
+    Button type = "primary"
+    htmlType = "submit" >
+    提交 <
+    /Button> <
+    Button style = {
+      {
+        marginLeft: '20px'
+      }
+    }
+    onClick = {
+      goBack
+    } >
+    返回 <
+    /Button> < /
+    Form.Item > <
+    /Form> < /
+    Card > <
+    /PageContainer>
   );
 };
 
-export default CreateGoods;
+export default CreateBanner;

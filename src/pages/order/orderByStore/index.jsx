@@ -233,7 +233,7 @@ const OrderByStore = () => {
         </div>
       </Card>
       <Card
-        className={styles.search_btn}
+        className={styles.table_con}
         title="查询列表"
         extra={
           <div>

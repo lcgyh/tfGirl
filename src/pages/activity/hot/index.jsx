@@ -1,92 +1,113 @@
+
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
-import { Card, Table, Space, Button } from 'antd';
-import SearchList from './components/search';
-import Delivery from './components/delivery';
-import { columns } from './conf';
-import './style.less';
+import { Button, Select, Input, Card, Space, Table } from 'antd';
+import FormItemBySelf from '@/components/formItemBySelf';
+import { reqPopularList } from './service'
+import { columns } from './config';
+import styles from './style.less';
 
-const OrderByStore = () => {
+const BannerCenter = () => {
   const history = useHistory();
-
-  const [searchParam, setSearchParam] = useState({});
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [pagination, setPagination] = useState({
     pageSize: 10,
     current: 1,
     total: 0,
   });
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ]);
+  const [formData, setFormData] = useState({});
+  const [dataSource, setDataSource] = useState([]);
 
-  const [visibleData, setVisibleData] = useState({
-    visible: false,
-    record: {},
-  });
 
   // 查询列表
-  const getDataList = (formData = {}, page = {}) => {
+  const getDataList = async (page = {}) => {
     const param = {
       ...formData,
-      pageSize: page.pageSize || 10,
-      current: page.current || 1,
+      pageSize: page.pageSize || pagination.pageSize,
+      current: page.current || pagination.current,
     };
+    const result = await reqPopularList(param)
+    const { list, pageSize, total, pageNum } = result
     // 请求数据
-    // setDataSource()
-    // setPagination()
-    // setSearchParam(查询参数)
+    setDataSource(list)
+    setPagination({
+      ...pagination,
+      pageSize,
+      current: pageNum,
+      total
+    })
   };
-  const onChange = (page) => {
-    getDataList(searchParam, page);
-  };
+
   useEffect(() => {
-    // getDataList()
+    getDataList()
   }, []);
 
-  const goInfo = (data) => {
-    console.log('data', data);
-    history.push('/order/store/info');
+  const formChange = (e, key) => {
+    setFormData({
+      ...formData,
+      [key]: e && e.target ? e.target.value : e,
+    });
+  };
+  const pageChange = (page) => {
+    getDataList(page);
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-  const goCreate=()=>{
+  const goCreate = () => {
     history.push('/activity/hot/create');
   }
+
+  const goEdit = (params) => {
+    history.push(`/activity/hot/${params.popularId}/edit`);
+  }
+
+  const { spuId, spuName } = formData
   return (
     <PageContainer>
-      <SearchList getDataList={getDataList} />
+      <Card>
+        <Space style={{ flexWrap: 'wrap' }}>
+          <FormItemBySelf label="SPUID" width="100">
+            <Input
+              onChange={(e) => {
+                formChange(e, 'spuId');
+              }}
+              value={spuId}
+              placeholder="请输入"
+              className={styles.itemLabel_input}
+            />
+          </FormItemBySelf>
+          <FormItemBySelf label="商品名称" width="100">
+            <Input
+              onChange={(e) => {
+                formChange(e, 'spuName');
+              }}
+              value={spuName}
+              placeholder="请输入"
+              className={styles.itemLabel_input}
+            />
+          </FormItemBySelf>
+        </Space>
+
+        <div className={styles.search_btns}>
+          <Button type="primary" className={styles.search_btn} onClick={() => getDataList()}>
+            查询
+        </Button>
+          <Button
+            onClick={() => {
+              setFormData({});
+            }}
+          >
+            重置
+        </Button>
+        </div>
+      </Card>
       <Card
-        className="table-con"
+        className={styles.table_con}
         title="查询列表"
         extra={
           <div>
             <Space>
               <Button type="primary" onClick={() => goCreate()}>
-                新增热销活动
+                新建畅销活动
               </Button>
             </Space>
           </div>
@@ -96,22 +117,19 @@ const OrderByStore = () => {
           dataSource={dataSource.map((item, index) => {
             return {
               ...item,
-              goInfo,
               key: index,
+              goEdit,
             };
           })}
           columns={columns}
           bordered
-          onChange={onChange}
-          rowSelection={{
-            ...rowSelection,
-          }}
+          onChange={pageChange}
           pagination={pagination}
         />
       </Card>
-      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
     </PageContainer>
   );
 };
 
-export default OrderByStore;
+export default BannerCenter;
+
