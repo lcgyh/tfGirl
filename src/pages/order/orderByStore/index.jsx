@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
 import { Button, Select, Input, Card, DatePicker, Space, Table, message } from 'antd';
-import apiGetData from '@/utils/apiMeth'
 import moment from 'moment'
 import FormItemBySelf from '@/components/formItemBySelf';
 import Delivery from './components/delivery';
+import { reqOrderList } from './service'
+import { reqBrandList } from '../../goods/brand/service'
 import { columns, orderStatusList } from './conf';
-import './style.less';
+import styles from './style.less';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -31,7 +32,7 @@ const OrderByStore = () => {
 
   // 品牌查询
   const getBrandList = async () => {
-    const result = await apiGetData('GET', `/erp/v1/brand`)
+    const result = await reqBrandList()
     setBrandList(result)
   }
 
@@ -50,7 +51,7 @@ const OrderByStore = () => {
       pageSize: page.pageSize || pagination.pageSize,
       current: page.current || pagination.current,
     };
-    const result = await apiGetData('GET', '/erp/v1/order', param)
+    const result = await reqOrderList(param)
     const { list, pageSize, total, pageNum } = result
     // 请求数据
     setDataSource(list)
@@ -77,7 +78,6 @@ const OrderByStore = () => {
     getDataList(page);
   };
 
-
   // 发货
   const onDelivery = () => {
     if (selectedRows.length < 1) return message.error('请选择发货订单')
@@ -87,7 +87,6 @@ const OrderByStore = () => {
     if (result.length > 0) {
       return message.error('只有待发货订单可以发货')
     }
-
     setVisibleData({
       visible: true,
       record: {
@@ -104,7 +103,6 @@ const OrderByStore = () => {
     const result = selectedRows.filter((item) => {
       return String(item.orderStatus) !== '30'
     })
-    console.log('result-', result)
     if (result.length > 0) {
       return message.error('只有已发货订单可以操作补充快递单')
     }
@@ -118,15 +116,12 @@ const OrderByStore = () => {
     })
   }
 
-
-
-
   const goInfo = (data) => {
-    console.log('data', data);
-    history.push('/order/store/info');
+    history.push(`/order/store/info/${data.orderId}`);
   };
 
   const rowSelection = {
+    selectedRowKeys,
     onChange: (rowKeys, rows) => {
       setSelectedRowKeys(rowKeys);
       setSelectedRows(rows);
@@ -144,7 +139,7 @@ const OrderByStore = () => {
               }}
               value={shopName}
               placeholder="请输入"
-              className="itemLabel-input"
+              className={styles.itemLabel_input}
             />
           </FormItemBySelf>
           <FormItemBySelf label="商品名称" width="100">
@@ -154,11 +149,12 @@ const OrderByStore = () => {
               }}
               placeholder="请输入"
               value={spuName}
-              className="itemLabel-input"
+              className={styles.itemLabel_input}
             />
           </FormItemBySelf>
           <FormItemBySelf label="品牌" width="100" >
-            <Select className="itemLabel-input"
+            <Select
+              className={styles.itemLabel_input}
               allowClear
               value={brandId}
               placeholder="请选择"
@@ -181,13 +177,13 @@ const OrderByStore = () => {
                 formChange(e, 'orderNo');
               }}
               placeholder="请输入"
-              className="itemLabel-input"
+              className={styles.itemLabel_input}
               value={orderNo}
             />
           </FormItemBySelf>
           <FormItemBySelf label="订单状态" width="100">
             <Select
-              className="itemLabel-input"
+              className={styles.itemLabel_input}
               allowClear
               value={orderStatus}
               placeholder="请选择"
@@ -223,8 +219,8 @@ const OrderByStore = () => {
           </FormItemBySelf>
         </Space>
 
-        <div className="search-btns">
-          <Button type="primary" className="search-btn" onClick={() => getDataList(formData)}>
+        <div className={styles.search_btns}>
+          <Button type="primary" className={styles.search_btn} onClick={() => getDataList()}>
             查询
         </Button>
           <Button
@@ -237,7 +233,7 @@ const OrderByStore = () => {
         </div>
       </Card>
       <Card
-        className="table-con"
+        className={styles.search_btn}
         title="查询列表"
         extra={
           <div>
@@ -267,7 +263,7 @@ const OrderByStore = () => {
           pagination={pagination}
         />
       </Card>
-      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
+      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} getDataList={getDataList} />
     </PageContainer>
   );
 };

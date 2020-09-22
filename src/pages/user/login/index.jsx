@@ -20,7 +20,7 @@ const LoginMessage = ({ content }) => (
 );
 
 const Login = (props) => {
-  const { userLogin = {}, submitting } = props;
+  const { userLogin = {} } = props;
   const { status, type: loginType } = userLogin;
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
@@ -60,7 +60,7 @@ const Login = (props) => {
               },
             ]}
           />
-          <Submit loading={submitting}>登录</Submit>
+          <Submit>登录</Submit>
         </LoginForm>
       </div>
     </div>
@@ -69,5 +69,5 @@ const Login = (props) => {
 
 export default connect(({ login, loading }) => ({
   userLogin: login,
-  submitting: loading.effects['login/login'],
+  // submitting: loading.effects['login/login'],
 }))(Login);

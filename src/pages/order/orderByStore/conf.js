@@ -1,3 +1,5 @@
+import React from 'react';
+
 const orderStatusList = [{
   name: '待支付',
   value: '10'
@@ -19,12 +21,7 @@ const columns = [{
   align: 'center',
   render: (text, record) =>
     <
-      span style={
-        {
-          color: "#1890ff",
-          cursor: 'pointer'
-        }
-      }
+      span className='click_text'
       onClick={
         () => {
           record.goInfo(record)
@@ -75,71 +72,68 @@ const columns = [{
 
 const goodsColumns = [{
         title: '商品名称',
-    dataIndex: 'address13',
-    key: 'address13',
+    dataIndex: 'spuName',
+    key: 'spuName',
     align: 'center'
   },
   {
         title: '规格',
-    dataIndex: 'address14',
-    key: 'address14',
+    dataIndex: 'specs',
+    key: 'specs',
     align: 'center'
   },
   {
         title: '商品条码',
-    dataIndex: 'addresss',
-    key: 'address14',
+    dataIndex: 'barcode',
+    key: 'barcode',
     align: 'center'
   },
   {
         title: '预订数量',
-    dataIndex: 'addre1ss',
-    key: 'address14',
+    dataIndex: 'qty',
+    key: 'qty',
     align: 'center'
   },
   {
         title: '零售价',
-    dataIndex: 'address1',
-    key: 'address14',
+    dataIndex: 'price',
+    key: 'price',
     align: 'center'
   },
   {
         title: '折扣价',
-    dataIndex: 'address11',
-    key: 'address14',
+    dataIndex: 'discountPrice',
+    key: 'discountPrice',
     align: 'center'
   }
 ]
 
 const opaColumns = [{
         title: '操作',
-    dataIndex: 'address13',
-    key: 'address13',
+    dataIndex: 'opa',
+    key: 'opa',
     align: 'center'
   },
   {
         title: '操作时间',
-    dataIndex: 'address14',
-    key: 'address141',
+    dataIndex: 'updateTime',
+    key: 'updateTime',
     align: 'center'
   },
   {
         title: '操作人',
-    dataIndex: 'addresss',
-    key: 'address14',
+    dataIndex: 'logOperator',
+    key: 'logOperator',
     align: 'center'
   }
 ]
 
 const getCurrentItem=(value,key)=>{
-        console.log('value--', value)
-  console.log('key--',key)
   if((!value && value!==0) || !key) return {}
   if(key==='orderStatus'){
     const result = orderStatusList.filter((item)=>{
       return item.value === value
     })
-    console.log('result--',result)
     if(result.length>0){
       return result[0]
     }

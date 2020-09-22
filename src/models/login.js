@@ -29,32 +29,35 @@ const Model = {
       put
     }) {
       const response = yield call(fakeAccountLogin, payload);
-      if (response.code === 0) {
-        yield put({
-          type: 'changeLoginStatus',
-          payload: response,
-        }); // Login successfully
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        let {
-          redirect
-        } = params;
 
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
-          } else {
-            window.location.href = '/';
-            return;
+      console.log('response', response)
+
+
+      yield put({
+        type: 'changeLoginStatus',
+        payload: response,
+      }); // Login successfully
+      const urlParams = new URL(window.location.href);
+      const params = getPageQuery();
+      let {
+        redirect
+      } = params;
+
+      if (redirect) {
+        const redirectUrlParams = new URL(redirect);
+        if (redirectUrlParams.origin === urlParams.origin) {
+          redirect = redirect.substr(urlParams.origin.length);
+          if (redirect.match(/^\/.*#/)) {
+            redirect = redirect.substr(redirect.indexOf('#') + 1);
           }
+        } else {
+          window.location.href = '/';
+          return;
         }
-
-        history.replace(redirect || '/');
       }
+
+      history.replace(redirect || '/');
+
     },
 
 
@@ -64,46 +67,29 @@ const Model = {
       call,
       put
     }) {
-      const response = yield call(fakeAccountLogout, payload);
-      if (response.code === 0) {
-        const {
-          redirect
-        } = getPageQuery(); // Note: There may be security issues, please note
+      yield call(fakeAccountLogout, payload);
 
-        if (window.location.pathname !== '/user/login' && !redirect) {
-          localStorage.clear()
-          history.replace({
-            pathname: '/user/login',
-            search: stringify({
-              redirect: window.location.href,
-            }),
-          });
-        }
+      const {
+        redirect
+      } = getPageQuery(); // Note: There may be security issues, please note
+
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        localStorage.clear()
+        history.replace({
+          pathname: '/user/login',
+          search: stringify({
+            redirect: window.location.href,
+          }),
+        });
       }
+
     },
-
-
-
-    // logout() {
-    //   const {
-    //     redirect
-    //   } = getPageQuery(); // Note: There may be security issues, please note
-
-    //   if (window.location.pathname !== '/user/login' && !redirect) {
-    //     history.replace({
-    //       pathname: '/user/login',
-    //       search: stringify({
-    //         redirect: window.location.href,
-    //       }),
-    //     });
-    //   }
-    // },
   },
   reducers: {
     changeLoginStatus(state, {
       payload
     }) {
-      setAuthority(payload.data);
+      setAuthority(payload);
       return {
         ...state,
         status: payload.status,

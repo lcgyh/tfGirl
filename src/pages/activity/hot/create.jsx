@@ -33,7 +33,7 @@ const tailLayout = {
 
 const CreateGoods = () => {
   const history = useHistory();
-  const [dataSource, setDataSource] = useState([]);
+  const [fileImgs, setFileImgs] = useState([]);
   const [goodsDes, setGoodsDes] = useState([
     {
       type: '1',

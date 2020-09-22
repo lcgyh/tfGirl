@@ -66,6 +66,7 @@ export default {
   'menu.cooperation': '合作中心',
   'menu.cooperation.storeCenter': '门店管理',
   'menu.cooperation.storeCreate': '新建门店',
+  'menu.cooperation.storeEdit': '门店编辑',
   'menu.activity': '活动中心',
   'menu.activity.banner': 'banner管理',
   'menu.activity.seckill': '秒杀活动',

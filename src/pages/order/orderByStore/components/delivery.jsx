@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Input, message } from 'antd';
-import apiGetData from '@/utils/apiMeth'
-import FormItemBySelf from '../../../../components/formItemBySelf'
+import React from 'react';
+import { Modal, Input, message } from 'antd';
+import FormItemBySelf from '@/components/formItemBySelf'
+import { reqDeliveryOrder } from '../service'
 
 const Delivery = (props) => {
-  const { visibleData, setVisibleData } = props
+  const { visibleData, setVisibleData, getDataList } = props
   const { record, visible } = visibleData
   const handleOk = async () => {
     if (record.opType === '2' && !record.expressNo) return message.error('请输入快递单号')
@@ -15,11 +15,12 @@ const Delivery = (props) => {
         return item.orderId
       })
     }
-    await apiGetData('PUT', '/erp/v1/order/delivery', params)
+    await reqDeliveryOrder(params)
     setVisibleData({
       visible: false,
       record: {}
     })
+    getDataList()
     message.success('操作成功')
   }
   const handleCancel = () => {

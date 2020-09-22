@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { cloneDeep } from 'lodash';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -11,22 +12,17 @@ function getBase64(file) {
   });
 }
 
-const PicturesWall = () => {
+const PicturesWall = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileList, setFileList] = useState([]);
+  const { fileImgs, getFileListData,imgLength } = props;
 
   useEffect(() => {
-    setFileList([
-      {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ]);
-  }, []);
+    setFileList(fileImgs);
+  }, [fileImgs]);
+
   const handleCancel = () => {
     setPreviewVisible(false);
   };
@@ -39,26 +35,42 @@ const PicturesWall = () => {
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
 
-  const handleChange = ({ fileList }) => {
-    setFileList({ fileList });
+  const handleChange = (files) => {
+    setFileList(files.fileList);
+    if (files.file.status === 'done') {
+      const newFileList = cloneDeep(files.fileList)
+      for (let i = 0; i < newFileList.length; i++) {
+        if (newFileList[i].response && newFileList[i].response.code === 0) {
+          newFileList[i].url = newFileList[i].response.data;
+        }
+      }
+      getFileListData(newFileList);
+    }
   };
 
   const uploadButton = (
     <div>
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div style={{ marginTop: 8 }}>上传</div>
     </div>
   );
   return (
     <>
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        action="/erp/v1/pic/upload"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        headers={
+          {
+            token: localStorage.getItem('token'),
+            roleName: localStorage.getItem('roleName')
+          }
+
+        }
       >
-        {fileList.length >= 8 ? null : uploadButton}
+        {fileList.length >= imgLength ? null : uploadButton}
       </Upload>
       <Modal visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img alt="example" style={{ width: '100%' }} src={previewImage} />

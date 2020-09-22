@@ -15,8 +15,10 @@ const apiGetData = async (method, url, params, isGetMsg = false) => {
   }
   if (result.code !== 0) {
     message.error(result.msg)
+    throw (result.msg)
   }
   return result
+
 }
 
 export default apiGetData
