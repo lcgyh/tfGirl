@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Table, Space, Button, Descriptions } from 'antd';
 import FormItemBySelf from '../../../components/formItemBySelf'
-import { goodsColumns, opaColumns } from './conf'
+import { goodsColumns, opaColumns } from './config'
 
 const OrderStoreInfo = () => {
   const [orderInfo, setOrderInfo] = useState({

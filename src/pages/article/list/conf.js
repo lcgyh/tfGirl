@@ -1,38 +1,21 @@
-const orderStates = [{
-  name: '待支付',
+const articalStates = [{
+  name: '展示',
   value: '1',
-}, ];
+},{
+  name: '不展示',
+  value: '2',
+} ];
 
 const columns = [{
     title: '言语ID',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'id',
+    key: 'id',
     align: 'center',
-    render: (text, record) => ( <
-      span style = {
-        {
-          color: '#1890ff',
-          cursor: 'pointer',
-        }
-      }
-      onClick = {
-        () => {
-          record.goInfo(record);
-        }
-      } > {
-        ' '
-      } {
-        text
-      } {
-        ' '
-      } <
-      /span>
-    ),
   },
   {
     title: '言语标题',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'title',
+    key: 'title',
     align: 'center',
   },
   {
@@ -49,8 +32,8 @@ const columns = [{
   },
   {
     title: '状态',
-    dataIndex: 'address12',
-    key: 'address12',
+    dataIndex: 'wordStatus',
+    key: 'wordStatus',
     align: 'center',
   },
   {
@@ -132,7 +115,7 @@ const opaColumns = [{
 ];
 
 export {
-  orderStates,
+  articalStates,
   columns,
   goodsColumns,
   opaColumns

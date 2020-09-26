@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, Input, Card, DatePicker, Space, Divider, Image } from 'antd';
 import styles from '../style.less';
+import Delivery from './delivery';
 
-const Block = () => {
+
+const Block = (props) => {
+  const {info} = props
   return (
     <div className={styles.block}>
       <Image
@@ -39,45 +42,27 @@ const CardTitle = (title) => {
   );
 };
 
-const BlockList = () => {
+const BlockList = (props) => {
+  const {list=[{name:'zxx'}],title='xdfdf'}= props
+  const [visibleData, setVisibleData] = useState({
+    visible: false,
+    record: {},
+  });
   return (
     <Card
-      title={CardTitle('规格名称')}
+      title={CardTitle(title)}
       bordered={false}
       extra={<span className={styles.block_edit_opa}>修改</span>}
     >
       <Space style={{ flexWrap: 'wrap' }}>
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
-        <Block />
+        {
+          list.map((item,index)=>{
+            return <Block info={item}/>
+          })
+        }
+
       </Space>
+      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
     </Card>
   );
 };

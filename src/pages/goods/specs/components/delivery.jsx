@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Input, message } from 'antd';
+import { Modal, Input, message,Radio } from 'antd';
 import FormItemBySelf from '../../../../components/formItemBySelf';
+import {reqSpecEdit} from '../service'
 
 const Delivery = (props) => {
-  const { visibleData, setVisibleData } = props;
+  const { visibleData, setVisibleData,getDataList,setFormData } = props;
   const { record, visible } = visibleData;
-  const handleOk = () => {
-    if (!record.storeName) return message.error('请输入快递单号');
-    setVisibleData({
-      visible: false,
-      record: {},
-    });
+  const handleOk =async () => {
+    if (!record.specName) return message.error('请输入specName');
+    await reqSpecEdit(record)
+    await setFormData()
+    getDataList()
+    setVisibleData({visible: false,record: {}});
   };
   const handleCancel = () => {
     setVisibleData({
@@ -30,16 +31,24 @@ const Delivery = (props) => {
 
   return (
     <div>
-      <Modal title="发货" visible={visible} onOk={handleOk} onCancel={handleCancel}>
-        <FormItemBySelf label="快递单号" width="120">
+      <Modal title="新增规格" visible={visible} onOk={handleOk} onCancel={handleCancel}>
+        <FormItemBySelf label="规格名称" width="120">
           <Input
-            value={record.storeName}
+            value={record.specName}
             onChange={(e) => {
-              onChange(e, 'storeName');
+              onChange(e, 'specName');
             }}
             placeholder="请输入"
             style={{ width: '280px' }}
           />
+        </FormItemBySelf>
+        <FormItemBySelf label="规格状态" width="120">
+        <Radio.Group  onChange={(e) => {
+              onChange(e, 'specStatus');
+            }}  value={record.specStatus}>
+          <Radio value={1}>启用</Radio>
+          <Radio value={2}>禁用</Radio>
+        </Radio.Group>
         </FormItemBySelf>
       </Modal>
     </div>

@@ -13,7 +13,7 @@ import {
 } from '@ant-design/pro-layout';
 import {
   logColumns
-} from './conf';
+} from './config';
 
 const GoodsLog = () => {
   const [pagination, setPagination] = useState({

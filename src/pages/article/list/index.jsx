@@ -1,60 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
-import { Card, Table, Space, Button } from 'antd';
-import SearchList from './components/search';
-import Delivery from './components/delivery';
-import { columns } from './conf';
-import './style.less';
+import { Card, Table, Space, Button,Input,Select } from 'antd';
+import FormItemBySelf from '@/components/formItemBySelf';
+import { columns,articalStates } from './conf';
+import styles from './style.less';
+import {reqArticalListData} from './service'
 
+const { Option } = Select;
 const OrderByStore = () => {
   const history = useHistory();
-
-  const [searchParam, setSearchParam] = useState({});
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [formData,setFormData] =useState({})
   const [pagination, setPagination] = useState({
     pageSize: 10,
     current: 1,
     total: 0,
   });
-  const [dataSource, setDataSource] = useState([
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ]);
-
-  const [visibleData, setVisibleData] = useState({
-    visible: false,
-    record: {},
-  });
+  const [dataSource, setDataSource] = useState([]);
 
   // 查询列表
-  const getDataList = (formData = {}, page = {}) => {
+  const getDataList =async (page = {}) => {
     const param = {
       ...formData,
       pageSize: page.pageSize || 10,
       current: page.current || 1,
     };
-    // 请求数据
-    // setDataSource()
-    // setPagination()
-    // setSearchParam(查询参数)
+    const result = await reqArticalListData(param)
+    console.log('result-',result)
+    const {list=[],pageNum,pageSize,total} = result
+    setDataSource(list)
+    setPagination({
+      pageSize,
+      current: pageNum,
+      total,
+    })
+
   };
-  const onChange = (page) => {
-    getDataList(searchParam, page);
+  const onChange = (e,key) => {
+    setFormData({
+      ...formData,
+      [key]: e && e.target ? e.target.value : e,
+    });
   };
   useEffect(() => {
-    // getDataList()
+    getDataList()
   }, []);
 
   const goInfo = (data) => {
@@ -75,14 +64,51 @@ const OrderByStore = () => {
     if (key === '4') {
       history.push('/article/createWeChat');
     }
-
   }
 
   return (
     <PageContainer>
-      <SearchList getDataList={getDataList} />
+       <Card>
+      <Space style={{ flexWrap: 'wrap' }}>
+        <FormItemBySelf label="言语标题" width="100">
+          <Input
+            onChange={(e) => {
+              onChange(e, 'storeName');
+            }}
+            placeholder="请输入"
+            className={styles.itemLabel_input}
+          />
+        </FormItemBySelf>
+        <FormItemBySelf label="言语状态" width="100">
+          <Select className={styles.itemLabel_input} allowClear placeholder="请选择">
+            {articalStates.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+
+
+      </Space>
+
+      <div className={styles.search_btns}>
+        <Button type="primary" className={styles.search_btn} onClick={() => getDataList()}>
+          查询
+        </Button>
+        <Button
+          onClick={() => {
+            setFormData({});
+          }}
+        >
+          重置
+        </Button>
+      </div>
+    </Card>
       <Card
-        className="table-con"
+        className={styles.table_con}
         title="查询列表"
         extra={
           <div>
@@ -108,11 +134,10 @@ const OrderByStore = () => {
           columns={columns}
           bordered
           onChange={onChange}
-
           pagination={pagination}
         />
       </Card>
-      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
+      
     </PageContainer>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Select, Input, Card, DatePicker, Space } from 'antd';
 import FormItemBySelf from '../../../../components/formItemBySelf';
-import { orderStates } from '../conf';
+import { orderStates } from '../config';
 import styles from '../style.less';
 
 const { Option } = Select;

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
-import { Card, Table, Space, Button } from 'antd';
+import { Card, Table, Space, Button,Input,Select} from 'antd';
 import apiGetData from '@/utils/apiMeth'
-import SearchList from './components/search';
+import FormItemBySelf from '@/components/formItemBySelf';
 import Delivery from './components/delivery';
-import { columns } from './conf';
-import './style.less';
+import { columns,orderStates,spuStatusOpation,skuStatusOpation } from './config';
+import styles from  './style.less';
 
+
+const { Option } = Select;
 const GoodsList = () => {
   const history = useHistory();
-  const [searchParam, setSearchParam] = useState({});
+  const [formData,setFormData] = useState({})
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [pagination, setPagination] = useState({
@@ -19,7 +21,6 @@ const GoodsList = () => {
     total: 0,
   });
   const [dataSource, setDataSource] = useState([]);
-
   const [visibleData, setVisibleData] = useState({
     visible: false,
     record: {},
@@ -42,25 +43,26 @@ const GoodsList = () => {
       pageSize,
       current: pageNum
     })
-    setSearchParam(param)
   };
-  const onChange = (page) => {
+  const pageChange = (page) => {
     getDataList(searchParam, page);
   };
+
+  const onChange=(e,key)=>{
+    setFormData({
+      ...formData,
+      [key]: e && e.target ? e.target.value : e,
+    });
+  }
   useEffect(() => {
     getDataList()
   }, []);
 
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      setSelectedRowKeys(selectedRowKeys);
-      setSelectedRows(selectedRows);
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === 'Disabled User',
-      // Column configuration not to be checked
-      name: record.name,
-    }),
+    onChange: (rowKeys, rows) => {
+      setSelectedRowKeys(rowKeys);
+      setSelectedRows(rows);
+    }
   };
 
   const goGoCreate = () => {
@@ -79,9 +81,150 @@ const GoodsList = () => {
 
   return (
     <PageContainer>
-      <SearchList getDataList={getDataList} />
+      <Card>
+      <Space style={{ flexWrap: 'wrap' }}>
+        <FormItemBySelf label="SPUID" width="100">
+          <Input
+            onChange={(e) => {
+              onChange(e, 'spuId');
+            }}
+            value={formData.spuId}
+            placeholder="请输入"
+            className= {styles.itemLabel_input}
+          />
+        </FormItemBySelf>
+        <FormItemBySelf label="商品条码" width="100">
+          <Input
+            onChange={(e) => {
+              onChange(e, 'barCode');
+            }}
+            value={formData.barCode}
+            placeholder="请输入"
+            className= {styles.itemLabel_input}
+          />
+        </FormItemBySelf>
+        <FormItemBySelf label="商品名称" width="100">
+          <Input
+            onChange={(e) => {
+              onChange(e, 'spuName');
+            }}
+            value={formData.spuName}
+            placeholder="请输入"
+            className= {styles.itemLabel_input}
+          />
+        </FormItemBySelf>
+        <FormItemBySelf label="商品品牌" width="100">
+          <Select className= {styles.itemLabel_input} 
+                  allowClear 
+                  onChange={(e) => {
+                    onChange(e, 'brandId');
+                  }}
+                  value={formData.brandId}
+                  placeholder="请选择">
+            {orderStates.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+        <FormItemBySelf label="一级分类" width="100">
+          <Select className= {styles.itemLabel_input} 
+                  onChange={(e) => {
+                    onChange(e, 'categoryId1');
+                  }}
+                  value={formData.categoryId1}
+                  allowClear placeholder="请选择">
+            {orderStates.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+        <FormItemBySelf label="二级分类" width="100">
+          <Select className= {styles.itemLabel_input} 
+            onChange={(e) => {
+              onChange(e, 'categoryId2');
+            }}
+            value={formData.categoryId2}
+            allowClear 
+            placeholder="请选择">
+            {orderStates.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+        <FormItemBySelf label="SKUID" width="100">
+          <Input
+            onChange={(e) => {
+              onChange(e, 'skuId');
+            }}
+            value={formData.skuId}
+            placeholder="请输入"
+            className= {styles.itemLabel_input}
+          />
+        </FormItemBySelf>
+        <FormItemBySelf label="上线状态" width="100">
+          <Select className= {styles.itemLabel_input} 
+                allowClear 
+                onChange={(e) => {
+                  onChange(e, 'skuStatus');
+                }}
+                value={formData.skuStatus}
+                placeholder="请选择">
+            {spuStatusOpation.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+
+        <FormItemBySelf label="售卖状态" width="100">
+          <Select className= {styles.itemLabel_input} 
+                allowClear 
+                onChange={(e) => {
+                  onChange(e, 'spuStatus');
+                }}
+                value={formData.spuStatus}
+                placeholder="请选择">
+            {skuStatusOpation.map((item) => {
+              return (
+                <Option value={item.value} key={item.value}>
+                  {item.name}
+                </Option>
+              );
+            })}
+          </Select>
+        </FormItemBySelf>
+      </Space>
+
+      <div className={styles.search_btns}>
+        <Button type="primary" className={styles.search_btn} onClick={() => getDataList(formData)}>
+          查询
+        </Button>
+        <Button
+          onClick={() => {
+            setFormData({});
+          }}
+        >
+          重置
+        </Button>
+      </div>
+    </Card>
       <Card
-        className="table-con"
+        className={styles.table_con}
         title="查询列表"
         extra={
           <div>
@@ -109,7 +252,7 @@ const GoodsList = () => {
           })}
           columns={columns}
           bordered
-          onChange={onChange}
+          onChange={pageChange}
           scroll={{ x: 1600 }}
           rowSelection={{
             ...rowSelection,

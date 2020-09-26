@@ -1,9 +1,3 @@
-const orderStates = [
-  {
-    name: '待支付',
-    value: '1',
-  },
-];
 
 const columns = [
   {
@@ -92,4 +86,4 @@ const opaColumns = [
   },
 ];
 
-export { orderStates, columns, goodsColumns, opaColumns };
+export { columns, goodsColumns, opaColumns };

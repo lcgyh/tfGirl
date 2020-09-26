@@ -46,6 +46,10 @@ const PicturesWall = (props) => {
       }
       getFileListData(newFileList);
     }
+    if (files.file.status === 'removed'){
+      const newFileList = cloneDeep(files.fileList)
+      getFileListData(newFileList);
+    } 
   };
 
   const uploadButton = (
@@ -54,6 +58,8 @@ const PicturesWall = (props) => {
       <div style={{ marginTop: 8 }}>上传</div>
     </div>
   );
+
+  
   return (
     <>
       <Upload

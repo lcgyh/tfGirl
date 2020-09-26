@@ -29,7 +29,7 @@ class SecurityLayout extends React.Component {
     const token = localStorage.getItem('token')
     const roleName = localStorage.getItem('roleName')
 
-    const isLogin = token && roleName;
+    const isLogin = token && roleName && currentUser.adminId;
     const queryString = stringify({
       redirect: window.location.href,
     });
