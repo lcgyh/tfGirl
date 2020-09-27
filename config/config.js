@@ -271,8 +271,20 @@ export default defineConfig({
                   component: './article/list/createArticle',
                 },
                 {
+                  path: '/article/editArticle/:id',
+                  name: 'editArticle',
+                  hideInMenu: true,
+                  component: './article/list/createArticle',
+                },
+                {
                   path: '/article/createVideo',
                   name: 'createVideo',
+                  hideInMenu: true,
+                  component: './article/list/createVideo',
+                },
+                {
+                  path: '/article/editVideo/:id',
+                  name: 'editVideo',
                   hideInMenu: true,
                   component: './article/list/createVideo',
                 },
@@ -283,8 +295,20 @@ export default defineConfig({
                   component: './article/list/createVoice',
                 },
                 {
+                  path: '/article/editVoice/:id',
+                  name: 'editVoice',
+                  hideInMenu: true,
+                  component: './article/list/createVoice',
+                },
+                {
                   path: '/article/createWeChat',
                   name: 'createWeChat',
+                  hideInMenu: true,
+                  component: './article/list/createWeChat',
+                },
+                {
+                  path: '/article/editWeChat/:id',
+                  name: 'editWeChat',
                   hideInMenu: true,
                   component: './article/list/createWeChat',
                 },

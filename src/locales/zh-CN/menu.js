@@ -72,7 +72,14 @@ export default {
   'menu.activity.seckill': '秒杀活动',
   'menu.activity.new': '上新活动',
   'menu.activity.hot': '热销活动',
-
   'menu.article': '妈妈言语',
+  'menu.article.createArticle': '新增文章言语',
+  'menu.article.editArticle': '编辑文章言语',
+  'menu.article.createVoice': '新增语音言语',
+  'menu.article.editVoice': '编辑语音言语',
+  'menu.article.createVideo': '新增视频言语',
+  'menu.article.editVideo': '编辑视频言语',
+  'menu.article.createWeChat': '新增公众号言语',
+  'menu.article.editWeChat': '编辑公众号言语',
   'menu.article.articleList': '言语记录',
 };

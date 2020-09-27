@@ -1,122 +1,123 @@
 import React, { useState, useEffect } from 'react';
+import 'braft-editor/dist/index.css'
 import { PageContainer } from '@ant-design/pro-layout';
 import {
   Card,
-  Table,
-  Space,
   Button,
-  Descriptions,
   Form,
   Input,
-  Checkbox,
-  Select,
   message,
   Radio
 } from 'antd';
-import { cloneDeep } from 'lodash';
-import { useHistory } from 'react-router-dom';
-
-
-
-import { orderStates, goodsInfoColumns } from './conf';
-import PicturesWall from '../../../components/Upload';
-
-const { Option } = Select;
-const { TextArea } = Input;
+import { useHistory,useParams } from 'react-router-dom';
+import PicturesWall from '@/components/Upload';
+import {reqArticalCreate,reqArticalUpdate,reqArticalInfoData} from './service'
 
 const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
 };
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const CreateGoods = () => {
+const Articaledit = () => {
   const history = useHistory();
-  const [dataSource, setDataSource] = useState([]);
-  const [goodsDes, setGoodsDes] = useState([
-    {
-      type: '1',
-      value: '122',
-    },
-    {
-      type: '2',
-      value: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
-  const onFinish = (values) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
-  const addDes = (type) => {
-    const list = cloneDeep(goodsDes);
-    list.push({
-      type,
-      value: '',
-    });
-    setGoodsDes(list);
-  };
-
-
+  const params = useParams();
+  const {id} = params
+  const [form] = Form.useForm();
+  const [fileImgs,setFileImgs]=useState([])
 
   const goBack = () => {
     history.goBack();
   };
+  const onFinish =async (values) => {
+    if(!fileImgs || fileImgs.length<1) return message.error('请上传言语主图')
+    const param={
+      title:values.title,
+      content:values.content,
+      mainPic:fileImgs[0].url,
+      wordStatus:values.wordStatus,
+      wordType:4
+    }
 
+    if(id){
+      param.id=id
+      await reqArticalUpdate(param)
+    }else{
+      await reqArticalCreate(param)
+    }
+    goBack()
+    message.success('操作成功')
+  };
+
+  const getFileListData=(data)=>{
+    setFileImgs(data)
+  }
+
+  const getArticalInfo=async (param)=>{
+    const result = await reqArticalInfoData({id:param})
+    form.setFieldsValue({
+      title: result.title,
+      wordStatus: result.wordStatus,
+      content: result.content,
+    });
+    if(result.mainPic){
+      setFileImgs([{
+        uid: '-1',
+        status: 'done',
+        url: result.mainPic
+      }])
+    }
+  }
+
+  useEffect(()=>{
+    if(id){
+      getArticalInfo()
+    }
+  },[id])
+  
   return (
     <PageContainer>
       <Card>
         <Form
           {...layout}
           name="basic"
-          initialValues={{ remember: true }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
         >
           <Form.Item
             label="言语标题"
-            name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            name="title"
+            rules={[{ required: true, message: '请输入言语标题' }]}
           >
-            <Input placeholder="请输入" />
+            <Input placeholder="请输入" style={{ width: '300px' }} />
           </Form.Item>
-
-
           <Form.Item
-            label="言语主图"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
-          >
-            <PicturesWall />
+            label="言语主图">
+            <PicturesWall 
+            fileImgs={fileImgs}
+            getFileListData={getFileListData}
+            imgLength={1}
+            />
           </Form.Item>
-
           <Form.Item
             label="言语状态"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            name="wordStatus"
+            initialValue={1}
+            rules={[{ required: true, message: '请选择言语状态' }]}
           >
             <Radio.Group >
               <Radio value={1}>开启</Radio>
               <Radio value={2}>关闭</Radio>
             </Radio.Group>
           </Form.Item>
-
-
-
           <Form.Item
-            label="文章内容"
-            name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            label="言语内容"
+            name="content"
+            rules={[{ required: true, message: '请输入言语内容' }]}
           >
-            <Input placeholder="请输入" />
+            <Input placeholder="请输入" style={{ width: '300px' }} />
           </Form.Item>
-
-
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               提交
@@ -131,4 +132,4 @@ const CreateGoods = () => {
   );
 };
 
-export default CreateGoods;
+export default Articaledit;

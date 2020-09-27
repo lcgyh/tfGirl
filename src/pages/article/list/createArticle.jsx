@@ -3,22 +3,16 @@ import 'braft-editor/dist/index.css'
 import { PageContainer } from '@ant-design/pro-layout';
 import {
   Card,
-  Table,
-  Space,
   Button,
-  Descriptions,
   Form,
   Input,
-  Checkbox,
-  Select,
   message,
   Radio
 } from 'antd';
-import { cloneDeep } from 'lodash';
-import { useHistory } from 'react-router-dom';
+import { useHistory,useParams } from 'react-router-dom';
 import BraftEditor from 'braft-editor'
 import PicturesWall from '@/components/Upload';
-import {reqArticalCreate,reqArticalUpdate} from './service'
+import {reqArticalCreate,reqArticalUpdate,reqArticalInfoData} from './service'
 
 const layout = {
   labelCol: { span: 4 },
@@ -28,24 +22,62 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const CreateGoods = () => {
+const Articaledit = () => {
   const history = useHistory();
+  const params = useParams();
+  const {id} = params
+  const [form] = Form.useForm();
   const [fileImgs,setFileImgs]=useState([])
+
+  const goBack = () => {
+    history.goBack();
+  };
   const onFinish =async (values) => {
-    console.log('Success:', values);
-    await reqArticalCreate(values)
+    if(!fileImgs || fileImgs.length<1) return message.error('请上传言语主图')
+    const param={
+      title:values.title,
+      content:values.content.toHTML(),
+      mainPic:fileImgs[0].url,
+      wordStatus:values.wordStatus,
+      wordType:1
+    }
+
+    if(id){
+      param.id=id
+      await reqArticalUpdate(param)
+    }else{
+      await reqArticalCreate(param)
+    }
     goBack()
     message.success('操作成功')
   };
 
-
   const getFileListData=(data)=>{
     setFileImgs(data)
   }
-  const goBack = () => {
-    history.goBack();
-  };
 
+  const getArticalInfo=async (param)=>{
+    const result = await reqArticalInfoData({id:param})
+    form.setFieldsValue({
+      title: result.title,
+      wordStatus: result.wordStatus,
+      content: result.content,
+    });
+    if(result.mainPic){
+      setFileImgs([{
+        uid: '-1',
+        status: 'done',
+        url: result.mainPic
+      }])
+    }
+  }
+
+  useEffect(()=>{
+    if(id){
+      getArticalInfo()
+    }
+  },[id])
+  
   return (
     <PageContainer>
       <Card>
@@ -72,6 +104,7 @@ const CreateGoods = () => {
           <Form.Item
             label="言语状态"
             name="wordStatus"
+            initialValue={1}
             rules={[{ required: true, message: '请选择言语状态' }]}
           >
             <Radio.Group >
@@ -103,4 +136,4 @@ const CreateGoods = () => {
   );
 };
 
-export default CreateGoods;
+export default Articaledit;

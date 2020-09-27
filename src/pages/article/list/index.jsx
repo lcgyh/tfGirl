@@ -3,7 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { useHistory } from 'react-router-dom';
 import { Card, Table, Space, Button,Input,Select } from 'antd';
 import FormItemBySelf from '@/components/formItemBySelf';
-import { columns,articalStates } from './conf';
+import { columns,articalStates } from './config';
 import styles from './style.less';
 import {reqArticalListData} from './service'
 
@@ -26,7 +26,6 @@ const OrderByStore = () => {
       current: page.current || 1,
     };
     const result = await reqArticalListData(param)
-    console.log('result-',result)
     const {list=[],pageNum,pageSize,total} = result
     setDataSource(list)
     setPagination({
@@ -34,7 +33,6 @@ const OrderByStore = () => {
       current: pageNum,
       total,
     })
-
   };
   const onChange = (e,key) => {
     setFormData({
@@ -46,10 +44,6 @@ const OrderByStore = () => {
     getDataList()
   }, []);
 
-  const goInfo = (data) => {
-    console.log('data', data);
-    history.push('/order/store/info');
-  };
 
   const goCreate = (key) => {
     if (key === '1') {
@@ -63,6 +57,22 @@ const OrderByStore = () => {
     }
     if (key === '4') {
       history.push('/article/createWeChat');
+    }
+  }
+
+
+  const goEdit = (key,id) => {
+    if (key === '1') {
+      history.push(`/article/editArticle/${id}`);
+    }
+    if (key === '2') {
+      history.push(`/article/editVoice/${id}`);
+    }
+    if (key === '3') {
+      history.push(`/article/editVideo/${id}`);
+    }
+    if (key === '4') {
+      history.push(`/article/editWeChat/${id}`);
     }
   }
 
@@ -90,10 +100,7 @@ const OrderByStore = () => {
             })}
           </Select>
         </FormItemBySelf>
-
-
       </Space>
-
       <div className={styles.search_btns}>
         <Button type="primary" className={styles.search_btn} onClick={() => getDataList()}>
           查询
@@ -127,8 +134,8 @@ const OrderByStore = () => {
           dataSource={dataSource.map((item, index) => {
             return {
               ...item,
-              goInfo,
               key: index,
+              goEdit,
             };
           })}
           columns={columns}
