@@ -248,6 +248,11 @@ export default defineConfig({
                   hideInMenu: true,
                   component: './activity/hot/create',
                 },
+                {
+                  path: '/activity/express',
+                  name: 'express',
+                  component: './activity/express',
+                },
               ],
             },
             {
@@ -311,7 +316,7 @@ export default defineConfig({
                   name: 'editWeChat',
                   hideInMenu: true,
                   component: './article/list/createWeChat',
-                },
+                }
               ],
             },
 

@@ -1,10 +1,10 @@
 import apiGetData from '@/utils/apiMeth'
 
 
-export const reqSpecListData = async (params) => {
-  const result = await apiGetData('GET', `/erp/v1/product/specSearch`, params)
-  return result
-}
+// export const reqSpecListData = async (params) => {
+//   const result = await apiGetData('GET', `/erp/v1/product/specSearch`, params)
+//   return result
+// }
 
 export const reqSpecEdit = async (params) => {
   const result = await apiGetData('GET', `/erp/v1/product/spec`, params)

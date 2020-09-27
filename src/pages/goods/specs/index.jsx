@@ -6,7 +6,7 @@ import Delivery from './components/delivery';
 import DeliveryAttr from './components/deliveryAttr'
 import styles from './style.less';
 import BlockList from './components/list';
-import {reqSpecListData} from './service'
+import {reqProductSpecList} from './service'
 
 const OrderByStore = () => {
   const [formData,setFormData]=useState({})
@@ -25,7 +25,7 @@ const OrderByStore = () => {
     const param = {
       ...formData,
       };
-    const result = await reqSpecListData(param)
+    const result = await reqProductSpecList(param)
     setDataSource(result.specs || [])
   };
   const onChange = (e,key) => {

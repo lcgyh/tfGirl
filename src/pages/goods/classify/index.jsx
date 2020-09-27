@@ -11,12 +11,7 @@ import {reqCategoryListData} from './service'
 
 const OrderByStore = () => {
   const [formData,setFormData] = useState({})
-  const [dataSource, setDataSource] = useState([{
-    list:[{
-      name:'zxx'
-    }],
-    title:'xx'
-  }]);
+  const [dataSource, setDataSource] = useState([]);
   const [visibleData, setVisibleData] = useState({
     visible: false,
     record: {},
@@ -45,7 +40,7 @@ const OrderByStore = () => {
     });
   };
   useEffect(() => {
-    //  getDataList()
+    getDataList()
   }, []);
 
   
@@ -103,7 +98,7 @@ const OrderByStore = () => {
       >
         {
           dataSource.map((item,index)=>{
-            return <BlockList key={index} list={item.list} title={item.name}/>
+            return <BlockList key={index} detail={item} setVisibleData={setVisibleData} setVisibleSecondData={setVisibleSecondData}/>
           })
         }
       </Card>

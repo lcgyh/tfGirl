@@ -39,7 +39,7 @@ const PicturesWall = (props) => {
         const { file, onSuccess, onError, onProgress } = reqFile;
         const data = new FormData();
         data.append('file', file);
-        apiGetData('POST', "/erp/v1/pic/upload", data, false).then(res => {
+        apiGetData('POST', "/erp/v1/file/upload", data, false).then(res => {
             if (res) {
                 onSuccess({
                     code: 0,

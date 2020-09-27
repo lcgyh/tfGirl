@@ -72,6 +72,7 @@ export default {
   'menu.activity.seckill': '秒杀活动',
   'menu.activity.new': '上新活动',
   'menu.activity.hot': '热销活动',
+  'menu.activity.express': '运费管理',
   'menu.article': '妈妈言语',
   'menu.article.createArticle': '新增文章言语',
   'menu.article.editArticle': '编辑文章言语',

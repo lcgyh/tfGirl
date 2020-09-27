@@ -6,10 +6,10 @@ const Block = (props) => {
   const {info,setVisibleAttrData} = props
   const editspecAttr=()=>{
     setVisibleAttrData({
-        specAttrStatus:detail.specAttrStatus || '1',
-        specAttrName:detail.specAttrName,
-        specId:detail.specId,
-        specAttrId:detail.specAttrId,
+        specAttrStatus:info.specAttrStatus || '1',
+        specAttrName:info.specAttrName,
+        specId:info.specId,
+        specAttrId:info.specAttrId,
         opType:'2'
     })
   }
