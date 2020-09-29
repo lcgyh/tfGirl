@@ -1,15 +1,15 @@
 import React from 'react';
-import {  Card, Space, Divider, Image } from 'antd';
+import { Card, Space, Divider, Image } from 'antd';
 import styles from '../style.less';
 
 const Block = (props) => {
-  const {info={},setVisibleData} = props
-  const editItem=()=>{  
+  const { info = {}, setVisibleData } = props
+  const editItem = () => {
     setVisibleData({
       visible: true,
-      record:{
+      record: {
         ...info,
-        opType:2
+        opType: 2
       },
     })
   }
@@ -29,7 +29,7 @@ const Block = (props) => {
           <div className={styles.block_edit_t_title}>{info.brandName}</div>
           <div className={styles.block_edit_t_icon_con}>
             {
-              info.brandStatus===1?<div className={styles.card_title_icon}>禁</div>:null
+              String(info.brandStatus) === '2' ? <div className={styles.card_title_icon}>禁</div> : null
             }
 
           </div>
@@ -38,7 +38,7 @@ const Block = (props) => {
         </div>
         <div className={styles.block_edit_b}>
           <Space>
-  <div>spu:{info.spuCount}</div>
+            <div>spu:{info.spuCount}</div>
             <div>sku:{info.skuCount}</div>
           </Space>
         </div>
@@ -49,15 +49,15 @@ const Block = (props) => {
 
 
 const BlockList = (props) => {
-  const {dataSource=[],setVisibleData} = props
+  const { dataSource = [], setVisibleData } = props
   return (
     <Card
       bordered={false}
     >
       <Space style={{ flexWrap: 'wrap' }}>
         {
-          dataSource.map((item,index)=>{
-            return   <Block info={item} key={index} setVisibleData={setVisibleData}/>
+          dataSource.map((item) => {
+            return <Block info={item} key={item.brandId} setVisibleData={setVisibleData} />
           })
         }
       </Space>

@@ -19,7 +19,7 @@ import {
 const Model = {
   namespace: 'login',
   state: {
-    status: undefined,
+    // status: undefined,
   },
   effects: {
     * login({
@@ -73,9 +73,9 @@ const Model = {
         redirect
       } = getPageQuery(); // Note: There may be security issues, please note
 
-      
+
       if (window.location.pathname !== '/user/login' && !redirect) {
-        
+
         localStorage.clear()
         history.replace({
           pathname: '/user/login',
@@ -94,8 +94,8 @@ const Model = {
       setAuthority(payload);
       return {
         ...state,
-        status: payload.status,
-        type: payload.type
+        // status: payload.status,
+        // type: payload.type
       };
     },
   },

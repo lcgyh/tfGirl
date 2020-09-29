@@ -13,7 +13,8 @@ const Delivery = (props) => {
     }else{
       await reqCategoryFirstCreate(record)
     }
-    await setFormData()
+    await setFormData({})
+    console.log(123)
     getDataList()
     setVisibleData({visible: false,record: {}});
   };

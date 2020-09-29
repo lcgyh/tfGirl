@@ -9,7 +9,9 @@ import BlockList from './components/list';
 import {reqProductSpecList} from './service'
 
 const OrderByStore = () => {
-  const [formData,setFormData]=useState({})
+  const [formData,setFormData]=useState({
+    isSearch:false
+  })
   const [dataSource, setDataSource] = useState([]);
   const [visibleData, setVisibleData] = useState({
     visible: false,
@@ -23,11 +25,18 @@ const OrderByStore = () => {
   // 查询列表
   const getDataList =async () => {
     const param = {
-      ...formData,
+      specAttrName:formData.specAttrName,
+      specName:formData.specName,
       };
     const result = await reqProductSpecList(param)
+    setFormData({
+      ...formData,
+      isSearch:false
+    })
     setDataSource(result.specs || [])
   };
+
+ 
   const onChange = (e,key) => {
     setFormData({
       ...formData,
@@ -35,8 +44,15 @@ const OrderByStore = () => {
     });
   };
   useEffect(() => {
-    getDataList()
+    if(formData && formData.isSearch){
+      getDataList()
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    setFormData({isSearch:true})
   }, []);
+  
 
   return (
     <PageContainer>
@@ -45,21 +61,21 @@ const OrderByStore = () => {
         <FormItemBySelf label="规格" width="100">
           <Input
             onChange={(e) => {
-              onChange(e, 'categoryFirstName');
+              onChange(e, 'specName');
             }}
             placeholder="请输入"
             className={styles.itemLabel_input}
-            value={formData.categoryFirstName}
+            value={formData.specName}
           />
         </FormItemBySelf>
         <FormItemBySelf label="规格值" width="100">
           <Input
             onChange={(e) => {
-              onChange(e, 'categorySecondName');
+              onChange(e, 'specAttrName');
             }}
             placeholder="请输入"
             className={styles.itemLabel_input}
-            value={formData.categorySecondName}
+            value={formData.specAttrName}
           />
         </FormItemBySelf>
       </Space>
@@ -69,7 +85,7 @@ const OrderByStore = () => {
         </Button>
         <Button
           onClick={() => {
-            setFormData({});
+            setFormData({isSearch:false});
           }}
         >
           重置
@@ -91,8 +107,8 @@ const OrderByStore = () => {
               <Button 
               type="primary"
               onClick={() => setVisibleAttrData({ visible: true, record: {
-                specStatus: '1',
-                specName:null,
+                specAttrStatus: '1',
+                specAttrName:null,
                 opType:'1'
               } })}
               >新增规格值</Button>
@@ -106,8 +122,8 @@ const OrderByStore = () => {
           })
         }
       </Card>
-      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} />
-      <DeliveryAttr visibleData={visibleAttrData} setVisibleData={setVisibleAttrData} />
+      <Delivery visibleData={visibleData} setVisibleData={setVisibleData} setFormData={setFormData}/>
+      <DeliveryAttr visibleData={visibleAttrData} setVisibleData={setVisibleAttrData}setFormData={setFormData}/>
     </PageContainer>
   );
 };

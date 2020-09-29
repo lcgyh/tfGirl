@@ -17,6 +17,7 @@ const Block = (props) => {
   return (
     <div className={styles.block}>
       <Image
+        key={info.countryId}
         width={100}
         height={100}
         src={info.countryUrl}
@@ -29,7 +30,7 @@ const Block = (props) => {
           <div className={styles.block_edit_t_title}>{info.countryName}</div>
           <div className={styles.block_edit_t_icon_con}>
             {
-              info.countryStatus===1?<div className={styles.card_title_icon}>禁</div>:null
+              String(info.countryStatus)==='2'?<div className={styles.card_title_icon}>禁</div>:null
             }
 
           </div>
@@ -56,8 +57,8 @@ const BlockList = (props) => {
     >
       <Space style={{ flexWrap: 'wrap' }}>
         {
-          dataSource.map((item,index)=>{
-            return   <Block info={item} key={index} setVisibleData={setVisibleData}/>
+          dataSource.map((item)=>{
+            return   <Block info={item} key={item.countryId} setVisibleData={setVisibleData}/>
           })
         }
       </Space>

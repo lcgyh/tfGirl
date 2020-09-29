@@ -114,6 +114,9 @@ const columns = [{
     key: 'storeQty',
     align: 'center',
     width: '5%',
+    render:(text,record)=>{
+      return <span className = 'click_text' onClick={()=>{record.goInv(record)}}>{text || 0}</span>
+    }
   },
   {
     title: '操作',
@@ -127,6 +130,7 @@ const columns = [{
         编辑 
         </span>
          <Divider type = "vertical" / >
+           
         <span className = 'click_text'
             onClick = {() => record.goInfo()} > 
         详情 

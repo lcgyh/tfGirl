@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, Input, message,Radio } from 'antd';
 import FormItemBySelf from '../../../../components/formItemBySelf';
 import {reqSpecEdit} from '../service'
 
 const Delivery = (props) => {
-  const { visibleData, setVisibleData,getDataList,setFormData } = props;
+  const { visibleData, setVisibleData,setFormData } = props;
   const { record, visible } = visibleData;
   const handleOk =async () => {
     if (!record.specName) return message.error('请输入specName');
     await reqSpecEdit(record)
-    await setFormData()
-    getDataList()
+    setFormData({isSearch:true})
     setVisibleData({visible: false,record: {}});
   };
   const handleCancel = () => {
@@ -31,7 +30,7 @@ const Delivery = (props) => {
 
   return (
     <div>
-      <Modal title="新增规格" visible={visible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal   title={record.specId?"编辑规格":'新增规格'}  visible={visible} onOk={handleOk} onCancel={handleCancel}>
         <FormItemBySelf label="规格名称" width="120">
           <Input
             value={record.specName}
@@ -46,8 +45,8 @@ const Delivery = (props) => {
         <Radio.Group  onChange={(e) => {
               onChange(e, 'specStatus');
             }}  value={record.specStatus}>
-          <Radio value={1}>启用</Radio>
-          <Radio value={2}>禁用</Radio>
+          <Radio value='1'>启用</Radio>
+          <Radio value='2'>禁用</Radio>
         </Radio.Group>
         </FormItemBySelf>
       </Modal>

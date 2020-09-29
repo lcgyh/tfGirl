@@ -11,7 +11,7 @@ export const reqCategoryDetail = async (params) => {
   return result
 }
 
-
+// 一级分类列表
 export const reqCategoryFirstList = async (params) => {
   const result = await apiGetData('GET', `/erp/v1/category/first/list`, params)
   return result
@@ -26,6 +26,7 @@ export const reqCategoryFirstUpdate = async (params) => {
   return result
 }
 
+// 二级分类列表
 export const reqCategorySecondList = async (params) => {
   const result = await apiGetData('GET', `/erp/v1/category/second/list`, params)
   return result

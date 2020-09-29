@@ -4,15 +4,16 @@ import { PlusOutlined } from '@ant-design/icons';
 import React, { useState, useEffect,useRef } from 'react';
 
 const EditableTagGroup=(props)=>{
-  const {list=[],deleteSpecAttr,addSpecAttr} =props
+  const {list=[],deleteSpecAttr,addSpecAttr,type} =props
 
   const [tags,setTags] =useState([])
   const [inputVisible,setInputVisible] =useState(false)
   const [inputValue,setInputValue] =useState('')
   const saveInputRef = useRef()
 
-  const handleClose = removedTag => {
-    deleteSpecAttr(removedTag)
+  const handleClose = (removedTag,e) => {
+    console.log('removedTag--',removedTag)
+    deleteSpecAttr(e,removedTag,type)
   };
 
   const showInput=()=>{
@@ -48,7 +49,7 @@ const EditableTagGroup=(props)=>{
       setInputValue('')
     }
   };
-
+  console.log('tags--',tags)
   return (
     <>
       {tags.map((tag, index) => {
@@ -58,7 +59,7 @@ const EditableTagGroup=(props)=>{
           <Tag
             key={tagName}
             closable={tags.length>1}
-            onClose={() => handleClose(tag)}
+            onClose={(e) => handleClose(tag,e)}
           >
             <span>
               {isLongTag ? `${tagName.slice(0, 20)}...` : tagName}
