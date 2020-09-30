@@ -18,7 +18,7 @@ import PicturesWall from '@/components/Upload';
 import DeleteDes from './components/deleteDes';
 import { orderStates, goodsColumn, getGoodsColumn } from './config';
 import { reqGoodsEdit, reqGoodsInfo } from './service'
-import { reqProductSpecList, reqSpecAttrList, reqSpecAttrCreate,reqSpecAttrEdit } from '../specs/service'
+import { reqProductSpecList, reqSpecAttrList, reqSpecAttrEdit } from '../specs/service'
 import EditableTagGroup from './components/tag'
 import { reqBrandList } from '../brand/service'
 import { reqCategoryFirstList, reqCategorySecondList } from '../classify/service'
@@ -37,12 +37,13 @@ const layout1 = {
 };
 
 const tailLayout = {
-  wrapperCol: { offset: 6, span: 16 },
+  wrapperCol: { offset: 4, span: 16 },
 };
 
 const CreateGoods = () => {
 
   const params = useParams();
+  console.log('params--', params)
   const { spuId } = params
   const history = useHistory();
   const [form] = Form.useForm();
@@ -55,19 +56,54 @@ const CreateGoods = () => {
     value: ''
   }]);
 
-  const [specList, setSpecList] = useState([])
   const [brandList, setBrandList] = useState([])
   const [firstSpecList, setFirstSpecList] = useState([])
   const [secondSpecList, setSecondSpecList] = useState([])
-
   const [firstSpecAttrList, setFirstSpecAttrList] = useState([])
   const [secondSpecAttrList, setSecondSpecAttrList] = useState([])
   const [categoryFirst, setCategoryFirst] = useState([])
   const [categorySecond, setCategorySecond] = useState([])
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState({
+    changeDataSouse: false
+  })
+
+
+
+  const addKey = (list) => {
+    const arr = list
+    for (let i = 0; i < arr.length; i++) {
+      arr[i].key = i + 1
+    }
+    return arr
+  }
+
+  const goBack = () => {
+    history.goBack();
+  };
+
   const onFinish = async (values) => {
-    console.log('Success:', values);
-    await reqGoodsEdit(values)
+    const spuPics = fileImgs.map((item) => {
+      return item.url
+    })
+    if (spuPics.length < 1) return message.error('请上传商品图片')
+    if (dataSource.length < 1) return message.error('请设置商品信息')
+    const dataSourceValueErr = dataSource.filter((item) => {
+      return !item.specAttrId1 || !item.specAttrId2 || !item.skuBarCode || !item.skuRetailPrice
+    })
+    if (dataSourceValueErr.length > 0) return message.error('商品信息不完整')
+
+    const spuDetail = goodsDes.filter((item) => {
+      return item.value
+    })
+    if (spuDetail.length < 1) return message.error('请至少设置一组详情')
+    const param = {
+      ...values,
+      spuPics,
+      pdPdSkuAdds: dataSource,
+      spuDetail,
+      opType: '1'
+    }
+    await reqGoodsEdit(param)
     goBack()
     message.success('操作成功')
   };
@@ -91,14 +127,17 @@ const CreateGoods = () => {
     setFileImgs(data)
   }
 
+  const desGetFileListData = (data, index) => {
+    const list = cloneDeep(goodsDes);
+    list[index].value = data[0].url
+    setGoodsDes(list);
+  }
+
 
   const getDatasouceFileList = (index, data) => {
-    console.log('index', index)
-    console.log('data', data)
     if (data && data.length > 0) {
       const newDataSource = cloneDeep(dataSource)
       newDataSource[index].skuPic = data[0].url
-      console.log('newDataSource--ss', newDataSource)
       setDataSource(addKey(newDataSource))
     }
   }
@@ -110,14 +149,39 @@ const CreateGoods = () => {
     setGoodsDes(list);
   };
 
-  const goBack = () => {
-    history.goBack();
-  };
 
-  const getGoodsInfo = async (spuId) => {
-    const params = { spuId }
-    const result = await reqGoodsInfo(params)
-    setGoodsInfo(result)
+  const getGoodsInfo = async (data) => {
+    const par = { spuId: data }
+    const result = await reqGoodsInfo(par)
+    const { pdSkus, pdSpu } = result
+    form.setFieldsValue({
+      spuName: pdSpu.spuName,
+      spuBrandId: pdSpu.spuBrandId,
+      countryId: pdSpu.countryId,
+      categoryId1: pdSpu.categoryId1,
+      categoryId2: pdSpu.categoryId2,
+      spuSellingPoint: pdSpu.spuSellingPoint,
+      spuSellingPoingStr: pdSpu.spuSellingPoingStr,
+      specId1: pdSpu.specId1,
+      specId2: pdSpu.specId2,
+    });
+
+    const imgs = pdSpu.spuPics.map((item, index) => {
+      return {
+        uid: `${item}${index}`,
+        status: 'done',
+        url: item
+      }
+    })
+    setFileImgs(imgs)
+    setGoodsDes(pdSpu.spuDetail || [])
+    setFormData({
+      ...formData,
+      specId1: pdSpu.specId1,
+      specId2:pdSpu.specId2,
+      changeDataSouse:false
+    })
+    setDataSource(pdSkus)
   }
 
   const getSpecList = async () => {
@@ -131,64 +195,64 @@ const CreateGoods = () => {
     for (let i = 0; i < newSpecs2.length; i++) {
       newSpecs2[i].disabled = false
     }
-    setSpecList(specs)
     setFirstSpecList(newSpecs1)
     setSecondSpecList(newSpecs2)
 
   }
-  const getSpecAttrs = async (id, type) => {
+  const getSpecAttrs = async (id, type, changeDataSouse) => {
+    console.log('getSpecAttrs')
+    console.log('changeDataSouse',changeDataSouse)
+    console.log('type',type)
     if (!id) return
     const result = await reqSpecAttrList(id)
     if (type === '1') {
-      console.log('result--', result)
-      const newDataSource = cloneDeep(dataSource)
-      for (var i = 0; i < newDataSource.length; i++) {
-        newDataSource[i].specAttrId1 = null
-      }
       setFirstSpecAttrList(result)
-      setDataSource(addKey(newDataSource))
+      if (changeDataSouse) {
+        const newDataSource = cloneDeep(dataSource)
+        for (var i = 0; i < newDataSource.length; i++) {
+          newDataSource[i].specAttrId1 = null
+        }
+        setDataSource(addKey(newDataSource))
+      }
+
     }
     if (type === '2') {
       setSecondSpecAttrList(result)
-      const newDataSource = cloneDeep(dataSource)
-      for (var i = 0; i < newDataSource.length; i++) {
-        newDataSource[i].specAttrId2 = null
+      if (changeDataSouse) {
+        const newDataSource = cloneDeep(dataSource)
+        for (var i = 0; i < newDataSource.length; i++) {
+          newDataSource[i].specAttrId2 = null
+        }
+        setDataSource(addKey(newDataSource))
       }
-      setDataSource(addKey(newDataSource))
     }
   }
 
 
+ 
+
+
   useEffect(() => {
+    console.log('formData.specId1')
     if (formData.specId1) {
-      getSpecAttrs(formData.specId1, '1')
+      getSpecAttrs(formData.specId1, '1', formData.changeDataSouse)
     }
   }, [formData.specId1])
 
   useEffect(() => {
-    getSpecAttrs(formData.specId2, '2')
+    getSpecAttrs(formData.specId2, '2', formData.changeDataSouse)
   }, [formData.specId2])
 
   useEffect(() => {
     if (spuId) {
       getGoodsInfo(spuId)
     }
-
   }, [spuId])
-
-  const addKey = (list) => {
-    for (let i = 0; i < list.length; i++) {
-      list[i].key = i + 1
-    }
-    return list
-  }
 
   const addSkuItem = () => {
     if (!formData.specId1) return message.error('请选择商品规格1后再执行新增操作')
     const newDataSource = cloneDeep(dataSource)
-    console.log('newDataSource--', newDataSource)
     newDataSource.push({})
-    console.log('newDataSource--', newDataSource)
     setDataSource(addKey(newDataSource))
   }
   const deleteSku = (key) => {
@@ -226,7 +290,7 @@ const CreateGoods = () => {
   }, [])
 
 
-  const formChange = (e, key) => {
+  const formChange = (e, key, changeDataSouse) => {
     const value = e && e.target ? e.target.value : e
     const newSecondSpecList = cloneDeep(secondSpecList)
     const newFirstSpecList = cloneDeep(firstSpecList)
@@ -252,11 +316,10 @@ const CreateGoods = () => {
     }
     setFormData({
       ...formData,
-      [key]: value
+      [key]: value,
+      changeDataSouse
     })
   }
-
-
 
   const barCodeChange = (e, index) => {
     const newDataSource = cloneDeep(dataSource)
@@ -276,9 +339,6 @@ const CreateGoods = () => {
     setDataSource(addKey(newDataSource))
   }
 
-
-
-
   const firstSpecAttrChange = (e, index) => {
     const newDataSource = cloneDeep(dataSource)
     newDataSource[index].specAttrId1 = e
@@ -290,39 +350,41 @@ const CreateGoods = () => {
     setDataSource(addKey(newDataSource))
   }
 
-  const deleteSpecAttr =async (e,data, type) => {
+  const deleteSpecAttr = async (e, data, type) => {
     e.preventDefault();
-    console.log('data--',data)
     // 判断当前属性在商品信息列表中是否使用，，如果已经使用，提示不能删除
-    const result = dataSource.filter((item)=>{
-      return item.specAttrId1===data.specAttrId || item.specAttrId2===data.specAttrId
+    const result = dataSource.filter((item) => {
+      return item.specAttrId1 === data.specAttrId || item.specAttrId2 === data.specAttrId
     })
-    if(result.length>0) return message.error('当前规格在本商品列表中已使用，不能删除')
-    const param={
-      opType:'3',
-      specAttrId:data.specAttrId,
-      specId:data.specId,
-      specAttrName:data.specAttrName,
-      specAttrStatus:data.specAttrStatus,
+    if (result.length > 0) return message.error('当前规格在本商品列表中已使用，不能删除')
+    const param = {
+      opType: '3',
+      specAttrId: data.specAttrId,
+      specId: data.specId,
+      specAttrName: data.specAttrName,
+      specAttrStatus: data.specAttrStatus,
     }
     await reqSpecAttrEdit(param)
-    if(type==='1'){
-      getSpecAttrs(data.specId,'1')
+    if (type === '1') {
+      getSpecAttrs(data.specId, '1', formData.changeDataSouse)
     }
-    if(type==='2'){
-      getSpecAttrs(data.specId, '2')
+    if (type === '2') {
+      getSpecAttrs(data.specId, '2', formData.changeDataSouse)
     }
   }
 
-  const addSpecAttr = async (data, type) => {
-    await reqSpecAttrCreate(data)
+  // 新增规格属性
+  const addSpecAttr = async (e, data, type) => {
+    e.preventDefault();
+    await reqSpecAttrEdit(data)
     if (type === '1') {
-      getSpecAttrs(formData.specId1, '1')
+      getSpecAttrs(data.specId, '1', formData.changeDataSouse)
     }
     if (type === '2') {
-      getSpecAttrs(formData.specId2, '2')
+      getSpecAttrs(data.specId, '2', formData.changeDataSouse)
     }
   }
+
 
   const categoryId1Change = (e) => {
     if (e) {
@@ -334,7 +396,13 @@ const CreateGoods = () => {
       categoryId2: null
     });
   }
+  const desTextChange = (e, index) => {
+    const value = e && e.target ? e.target.value : e
+    const list = cloneDeep(goodsDes);
+    list[index].value = value
+    setGoodsDes(list);
 
+  }
 
   return (
     <PageContainer>
@@ -348,8 +416,8 @@ const CreateGoods = () => {
           <Form.Item
             {...layout1}
             label="商品名称"
-            name="brandName"
-            rules={[{ required: true, message: '请输入商品名称' }]}
+            name="spuName"
+            rules={[{ required: true, message: '请输入商品名称' }, { max: 50, message: '请输入50字以下的商品名称' }]}
           >
             <Input placeholder="请输入" />
           </Form.Item>
@@ -434,18 +502,18 @@ const CreateGoods = () => {
             {...layout1}
             label="商品卖点"
             name="spuSellingPoint"
-            rules={[{ required: true, message: '请输入商品卖点' }]}
+            rules={[{ required: true, message: '请输入商品卖点' }, { max: 50, message: '请输入50字以下的商品卖点' }]}
           >
-            <TextArea placeholder="请输入" autoSize={{ minRows: 3, maxRows: 5 }} />
+            <Input placeholder="请输入" />
           </Form.Item>
 
           <Form.Item
             {...layout1}
             label="卖点详情"
             name="spuSellingPoingStr"
-            rules={[{ required: true, message: '请输入卖点详情' }]}
+            rules={[{ required: true, message: '请输入卖点详情' }, { max: 200, message: '请输入200字以下的卖点详情' }]}
           >
-            <Input />
+            <TextArea placeholder="请输入" autoSize={{ minRows: 3, maxRows: 5 }} />
           </Form.Item>
 
           <Form.Item
@@ -455,8 +523,7 @@ const CreateGoods = () => {
             rules={[{ required: true, message: '请选择商品规格1' }]}
           >
             <Select
-
-              onChange={(e) => { formChange(e, 'specId1') }}
+              onChange={(e) => { formChange(e, 'specId1', true) }}
               placeholder="请选择">
               {firstSpecList.map((item) => {
                 return (
@@ -469,21 +536,25 @@ const CreateGoods = () => {
                 );
               })}
             </Select>
-            {
-              firstSpecAttrList && firstSpecAttrList.length > 0 ? <div style={{ marginTop: '10px' }}>
-                <EditableTagGroup list={firstSpecAttrList} deleteSpecAttr={deleteSpecAttr} addSpecAttr={addSpecAttr} type='1'/>
-              </div> : null
-            }
-
-
           </Form.Item>
+
+          {
+            formData.specId1 ?
+              <Form.Item
+                {...tailLayout}
+              >
+                <div style={{ marginTop: '10px' }}>
+                  <EditableTagGroup list={firstSpecAttrList} deleteSpecAttr={deleteSpecAttr} addSpecAttr={addSpecAttr} type='1' specId={formData.specId1} />
+                </div>
+              </Form.Item> : null
+          }
           <Form.Item
             {...layout1}
             label="商品规格2"
             name="specId2"
           >
             <Select
-              onChange={(e) => { formChange(e, 'specId2') }}
+              onChange={(e) => { formChange(e, 'specId2', true) }}
               allowClear placeholder="请选择">
               {secondSpecList.map((item) => {
                 return (
@@ -496,12 +567,17 @@ const CreateGoods = () => {
                 );
               })}
             </Select>
-            {
-              secondSpecAttrList && secondSpecAttrList.length > 0 ? <div style={{ marginTop: '10px' }}>
-                <EditableTagGroup list={secondSpecAttrList} deleteSpecAttr={deleteSpecAttr} addSpecAttr={addSpecAttr} type='2'/>
-              </div> : null
-            }
           </Form.Item>
+          {
+            formData.specId2 ?
+              <Form.Item
+                {...tailLayout}
+              >
+                <div style={{ marginTop: '10px' }}>
+                  <EditableTagGroup list={secondSpecAttrList} deleteSpecAttr={deleteSpecAttr} addSpecAttr={addSpecAttr} type='2' specId={formData.specId2} />
+                </div>
+              </Form.Item> : null
+          }
           <Form.Item label="商品信息">
             <div style={{ textAlign: 'right', marginBottom: "20px" }}>
               <Button
@@ -537,7 +613,7 @@ const CreateGoods = () => {
             <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
               <Button
                 onClick={() => {
-                  addDes('1');
+                  addDes('2');
                 }}
                 type="primary"
                 ghost
@@ -546,7 +622,7 @@ const CreateGoods = () => {
               </Button>
               <Button
                 onClick={() => {
-                  addDes('2');
+                  addDes('1');
                 }}
                 type="primary"
                 ghost
@@ -560,14 +636,24 @@ const CreateGoods = () => {
                   <div style={{ marginBottom: '10px' }}>
                     {item.type === '1' ? (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <TextArea placeholder="请输入" autoSize={{ minRows: 3, maxRows: 5 }} />
+                        <TextArea placeholder="请输入"
+                          autoSize={{ minRows: 3, maxRows: 5 }}
+                          value={item.value}
+                          onChange={(e) => { desTextChange(e, index) }}
+                        />
                         <DeleteDes deleteOption={deleteDes} index={index} />
                       </div>
                     ) : (
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <PicturesWall
-                            fileImgs={fileImgs}
-                            getFileListData={getFileListData}
+                            fileImgs={item.value ? [
+                              {
+                                uid: index,
+                                status: 'done',
+                                url: item.value
+                              }
+                            ] : []}
+                            getFileListData={(data) => desGetFileListData(data, index)}
                             imgLength={1}
                           />
                           <DeleteDes deleteOption={deleteDes} index={index} />

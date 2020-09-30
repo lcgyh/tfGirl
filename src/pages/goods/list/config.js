@@ -33,7 +33,7 @@ const columns = [{
     width: '10%',
     key: 'skuPic',
     align: 'center',
-    render: (text, record) => <Image width={200} src={text}/>,
+    render: (text, record) => <Image width={100} src={text}/>,
   },
   {
     title: 'SPUID',
@@ -126,17 +126,17 @@ const columns = [{
     width: '13%',
     render: (text, record) => {
       return ( <div >
-        <span className = 'click_text' onClick = {() => record.goEdit()} >
+        <span className = 'click_text' onClick = {() => record.goEdit(record)} >
         编辑 
         </span>
          <Divider type = "vertical" / >
            
         <span className = 'click_text'
-            onClick = {() => record.goInfo()} > 
+            onClick = {() => record.goInfo(record)} > 
         详情 
         </span>
         <Divider type = "vertical" / >
-        <span className = 'click_text' onClick = {() => record.goLog()} > 
+        <span className = 'click_text' onClick = {() => record.goLog(record)} > 
         日志
          </span>
       </div>
@@ -231,9 +231,14 @@ const logColumns = [{
   },
 ];
 
+const getSouTitle=(title)=>{
+    return <div style={{display:'flex',alignItems:'center',justifyContent:'center'}}>{title}<span style={{color:'red',marginLeft:'3px'}}>*</span></div>
+}
+
+
 const goodsColumn=[
       {
-        title: '商品规格1',
+        title: getSouTitle('商品规格1'),
         dataIndex: 'specAttrId1',
         key: 'specAttrId1',
         align: 'center',
@@ -254,7 +259,7 @@ const goodsColumn=[
         }
       },
       {
-        title: '商品规格2',
+        title: getSouTitle('商品规格2'),
         dataIndex: 'specAttrId2',
         key: 'specAttrId2',
         align: 'center',
@@ -274,7 +279,7 @@ const goodsColumn=[
         }
       },
       {
-        title: '商品条码',
+        title: getSouTitle('商品条码'),
         dataIndex: 'skuBarCode',
         key: 'skuBarCode',
         align: 'center',
@@ -294,7 +299,7 @@ const goodsColumn=[
         }
       },
       {
-        title: '零售价',
+        title: getSouTitle('零售价'),
         dataIndex: 'skuRetailPrice',
         key: 'skuRetailPrice',
         align: 'center',

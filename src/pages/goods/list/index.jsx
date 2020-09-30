@@ -92,14 +92,14 @@ const GoodsList = () => {
     history.push('/goods/create');
   };
 
-  const goInfo = () => {
-    history.push('/goods/info');
+  const goInfo = (record) => {
+    history.push(`/goods/info/${record.spuId}`);
   };
-  const goEdit = () => {
-    history.push('/goods/edit');
+  const goEdit = (record) => {
+    history.push(`/goods/edit/${record.spuId}`);
   };
-  const goLog = () => {
-    history.push('/goods/log');
+  const goLog = (record) => {
+    history.push(`/goods/log/${record.spuId}`);
   };
 
   const goInv = (record) => {

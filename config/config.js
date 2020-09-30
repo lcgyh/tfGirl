@@ -96,19 +96,19 @@ export default defineConfig({
                   hideInMenu: true,
                 },
                 {
-                  path: '/goods/info',
+                  path: '/goods/info/:spuId',
                   name: 'goodsInfo',
                   component: './goods/list/info',
                   hideInMenu: true,
                 },
                 {
-                  path: '/goods/log',
+                  path: '/goods/log/:spuId',
                   name: 'goodsLog',
                   component: './goods/list/log',
                   hideInMenu: true,
                 },
                 {
-                  path: '/goods/edit',
+                  path: '/goods/edit/:spuId',
                   name: 'goodsEdit',
                   component: './goods/list/create',
                   hideInMenu: true,

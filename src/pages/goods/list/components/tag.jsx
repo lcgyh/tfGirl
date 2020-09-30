@@ -1,10 +1,10 @@
 
-import { Tag, Input, Tooltip } from 'antd';
+import { Tag, Input, Tooltip, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import React, { useState, useEffect,useRef } from 'react';
 
 const EditableTagGroup=(props)=>{
-  const {list=[],deleteSpecAttr,addSpecAttr,type} =props
+  const {list=[],deleteSpecAttr,addSpecAttr,type,specId} =props
 
   const [tags,setTags] =useState([])
   const [inputVisible,setInputVisible] =useState(false)
@@ -38,15 +38,22 @@ const EditableTagGroup=(props)=>{
     setInputValue(e.target.value)
   }
 
-  const handleInputConfirm = () => {
+  const handleInputConfirm = (e) => {
     const tagNames= tags.map((item)=>{
       return item.specAttrName
     })
     if (inputValue && tagNames.indexOf(inputValue) === -1) {
-      const params={}
-      addSpecAttr(params)
+      const params={
+        opType:'1',
+        specAttrName:inputValue,
+        specAttrStatus:'1',
+        specId
+      }
+      addSpecAttr(e,params,type)
       setInputVisible(false)
       setInputValue('')
+    }else{
+      message.error('请输入格式正确的不重复的属性值')
     }
   };
   console.log('tags--',tags)

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Modal } from 'antd';
+import { Upload, Modal ,message} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
 
@@ -36,15 +36,19 @@ const PicturesWall = (props) => {
   };
 
   const handleChange = (files) => {
+    if(!files.file.status) return
     setFileList(files.fileList);
     if (files.file.status === 'done') {
       const newFileList = cloneDeep(files.fileList)
-      for (let i = 0; i < newFileList.length; i++) {
-        if (newFileList[i].response && newFileList[i].response.code === 0) {
-          newFileList[i].url = newFileList[i].response.data;
+      const result = newFileList.filter((item)=>{
+        return item.type && item.type !== "" 
+      })
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].response && result[i].response.code === 0  ) {
+          result[i].url = result[i].response.data;
         }
       }
-      getFileListData(newFileList);
+      getFileListData(result);
     }
     if (files.file.status === 'removed'){
       const newFileList = cloneDeep(files.fileList)
@@ -59,6 +63,19 @@ const PicturesWall = (props) => {
     </div>
   );
 
+  const beforeUpload=(file)=>{
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+    const isLt20M = file.size / 1024 / 1024 < 20;
+    if (!isJpgOrPng) {
+      message.error(`请上传png/jpg/jpeg格式的图片`);
+      return false
+    }
+    if (!isLt20M) {
+      message.error(`请上传小于20M大小的图片`);
+      return false
+    }
+    return isJpgOrPng && isLt20M;
+  }
   
   return (
     <>
@@ -68,6 +85,7 @@ const PicturesWall = (props) => {
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
+        beforeUpload={beforeUpload}
         headers={
           {
             token: localStorage.getItem('token'),
