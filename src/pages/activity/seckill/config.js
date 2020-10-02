@@ -179,11 +179,70 @@ const opaColumns = [{
   },
 ];
 
+
+const goodsColumnInfo=[
+  {
+    title: '商品规格1',
+    dataIndex: 'specAttr1Str',
+    key: 'specAttr1Str',
+    align: 'center',
+    width:'15%',
+  },
+  {
+    title: '商品规格2',
+    dataIndex: 'specAttr2Str',
+    key: 'specAttr2Str',
+    align: 'center',
+    width:'15%',
+  },
+  {
+    title: '商品条码',
+    dataIndex: 'skuBarCode',
+    key: 'skuBarCode',
+    align: 'center',
+    width:'15%',
+  },
+  {
+    title: '供货价',
+    dataIndex: 'skuSupplyPrice',
+    key: 'skuSupplyPrice',
+    align: 'center',
+    width:'15%',
+  },
+  {
+    title: '零售价',
+    dataIndex: 'skuRetailPrice',
+    key: 'skuRetailPrice',
+    align: 'center',
+    width:'15%',
+  },
+  {
+    title: '商品图片',
+    dataIndex: 'skuPic',
+    key: 'skuPic',
+    width:'25%',
+    align: 'center',
+  }
+
+]
+
+const getGoodsColumnInfo=(col)=>{
+  if(col){
+    const result = goodsColumnInfo.filter((item)=>{
+      return item.dataIndex !==col
+    })
+    return result
+  }
+  return goodsColumnInfo
+}
+
+
 export {
   skillStatusList,
   columns,
   goodsColumns,
   opaColumns,
   goodsInfoColumns,
-  getColumns
+  getColumns,
+  getGoodsColumnInfo
 };

@@ -99,7 +99,7 @@ const GoodsList = () => {
     history.push(`/goods/edit/${record.spuId}`);
   };
   const goLog = (record) => {
-    history.push(`/goods/log/${record.spuId}`);
+    history.push(`/goods/log/${record.skuId}`);
   };
 
   const goInv = (record) => {

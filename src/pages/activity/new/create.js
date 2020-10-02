@@ -42,9 +42,7 @@ const CreateBanner = () => {
   const [form] = Form.useForm();
   const params = useParams();
   const history = useHistory();
-  const {
-    newId
-  } = params
+  const {newId} = params
   const [opType, setOpType] = useState(1)
 
   const goBack = () => {
@@ -73,115 +71,74 @@ const CreateBanner = () => {
     });
   }
 
-  const formChange = (e, key) => {
-    form.setFieldsValue({
-      [key]: e && e.target ? e.target.value : e
-    });
-  }
 
   useEffect(() => {
     if (!newId) return
     gethotInfo()
   }, [newId])
 
-  return ( <
-    PageContainer >
-    <
-    Card >
-    <
-    Form {
-      ...layout
-    }
-    name = "basic"
-    onFinish = {
-      onFinish
-    } >
-    <
-    Form.Item label = "活动名称"
-    name = "newName"
-    rules = {
-      [{
-        required: true,
-        message: '请输入活动名称'
-      }]
-    } >
-    <
-    Input placeholder = "请输入"
-    onChange = {
-      (e) => {
-        formChange(e, 'newName')
-      }
-    }
-    />  < /
-    Form.Item >
-    <
-    Form.Item label = "活动商品(spuId)"
-    name = "spuId"
-    rules = {
-      [{
-        required: true,
-        message: '请输入活动商品'
-      }]
-    } >
-    <
-    Input placeholder = "请输入"
-    onChange = {
-      (e) => {
-        formChange(e, 'spuId')
-      }
-    }
-    /> < /
-    Form.Item >
+  return ( 
+    <PageContainer >
+      <Card >
+        <Form 
+          form={form}
+          {...layout}
+          name = "basic"
+          onFinish = {onFinish} >
+            <Form.Item 
+              label = "活动名称"
+              name = "newName"
+              rules = {
+                [{
+                  required: true,
+                  message: '请输入活动名称'
+                }]
+              } 
+            >
+              <Input placeholder = "请输入"/>  
+            </Form.Item >
+            <Form.Item 
+              label = "活动商品(spuId)"
+              name = "spuId"
+              rules = {
+                [{
+                  required: true,
+                  message: '请输入活动商品'
+                }]
+              } >
+              <Input placeholder = "请输入"
+            /> 
+            </Form.Item>
 
-    <
-    Form.Item label = "活动状态"
-    name = "newStatus"
-    initialValue = {
-      1
-    }
-    rules = {
-      [{
-        required: true,
-        message: '请选择活动状态'
-      }]
-    } >
-    <
-    Radio.Group onChange = {
-      (e) => {
-        formChange(e, 'newStatus')
-      }
-    } >
-    <
-    Radio value = {
-      1
-    } > 上线 < /Radio> <
-    Radio value = {
-      2
-    } > 下线 < /Radio> < /
-    Radio.Group > <
-    /Form.Item> <
-    Form.Item {
-      ...tailLayout
-    } >
-    <
-    Button type = "primary"
-    htmlType = "submit" >
-    提交 <
-    /Button> <
-    Button style = {
-      {
-        marginLeft: '20px'
-      }
-    }
-    onClick = {
-      goBack
-    } >
-    返回 <
-    /Button> < /
-    Form.Item > <
-    /Form> < /
-    Card > <
-    /PageContainer>
+            <Form.Item 
+              label = "活动状态"
+              name = "newStatus"
+              initialValue = {1}
+              rules = {
+                [{
+                  required: true,
+                  message: '请选择活动状态'
+                }]
+              } >
+            <Radio.Group >
+              <Radio value = {1} > 上线 </Radio> 
+              <Radio value = {2} > 下线 </Radio> 
+            </Radio.Group > 
+            </Form.Item> 
+            <Form.Item {...tailLayout} >
+              <Button 
+              type = "primary"
+              htmlType = "submit" >
+              提交 
+              </Button> 
+              <Button style = {{marginLeft: '20px'}}
+              onClick = {goBack} >
+              返回 
+              </Button> 
+            </Form.Item > 
+        </Form> 
+      </Card > 
+    </PageContainer>
   );
 };
 

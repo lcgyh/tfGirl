@@ -53,7 +53,6 @@ const OrderByStore = () => {
     };
     const result = await reqOrderList(param)
     const { list, pageSize, total, pageNum } = result
-    // 请求数据
     setDataSource(list)
     setPagination({
       ...pagination,

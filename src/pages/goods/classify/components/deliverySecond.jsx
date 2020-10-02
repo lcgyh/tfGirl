@@ -9,20 +9,21 @@ const { Option } = Select;
 const DeliverySecond = (props) => {
   const [fileImgs,setFileImgs] = useState([])
   const [firstList,setFirstList] = useState([])
-  const { visibleData, setVisibleData,getDataList,setFormData } = props;
+  const { visibleData, setVisibleData,setFormData } = props;
   const { record, visible } = visibleData;
 
   const handleOk =async () => {
+
     if (!record.parentCategoryId) return message.error('请选择一级分类');
-    if(!fileImgs.length<1) return message.error('请上传二级分类logo');
+    if(fileImgs.length<1) return message.error('请上传二级分类logo');
+    record.categoryLogo=fileImgs[0].url
     if(record.id){
-      record.categoryLogo=fileImgs[0].url
       await reqCategorySecondUpdate(record)
     }else{
       await reqCategorySecondCreate(record)
     }
-    await setFormData()
-    getDataList()
+   
+    setFormData({ isSearch: true })
     setVisibleData({visible: false,record: {}});
   };
   const handleCancel = () => {
@@ -73,7 +74,7 @@ const DeliverySecond = (props) => {
             }} value={record.parentCategoryId}> 
         {
           firstList.map((item,index)=>{
-            return  <Option value={item.parentCategoryId} key={index}>{item.categoryName}</Option>
+            return  <Option value={item.id} key={index}>{item.categoryName}</Option>
           })
         }
     </Select>
@@ -93,8 +94,8 @@ const DeliverySecond = (props) => {
           <Radio.Group  onChange={(e) => {
                 onChange(e, 'categoryStatus');
               }}  value={record.categoryStatus}>
-            <Radio value={1}>启用</Radio>
-            <Radio value={2}>禁用</Radio>
+            <Radio value='1'>启用</Radio>
+            <Radio value='2'>禁用</Radio>
           </Radio.Group>
         </FormItemBySelf>
         <FormItemBySelf label="分类logo" width="120" alignItems='start'>

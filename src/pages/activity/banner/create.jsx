@@ -104,14 +104,7 @@ const CreateBanner = () => {
                 message: '请输入banner名称'
               }]
             } >
-            <Input
-              placeholder="请输入"
-              onChange={
-                (e) => {
-                  formChange(e, 'bannerName')
-                }
-              }
-            />
+            <Input placeholder="请输入"/>
           </Form.Item>
           <Form.Item
             label="banner状态"
@@ -123,8 +116,7 @@ const CreateBanner = () => {
                 message: '请选择banner状态'
               }]
             } >
-            <Radio.Group
-              onChange={(e) => { formChange(e, 'bannerStatus') }} >
+            <Radio.Group>
               <Radio value={1} > 上线 </Radio>
               <Radio value={2} > 下线 </Radio>
             </Radio.Group>
@@ -138,10 +130,7 @@ const CreateBanner = () => {
                 message: '请输入联系人'
               }]
             } >
-            <Input
-              placeholder="请输入"
-              onChange={(e) => { formChange(e, 'bannerRank') }}
-            />
+            <Input placeholder="请输入"/>
           </Form.Item>
           <Form.Item label="banner图片" >
             <PicturesWall

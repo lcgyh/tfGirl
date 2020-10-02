@@ -12,7 +12,7 @@ export const reqDeliveryOrder = async (params) => {
 
 
 export const reqOrderInfo = async (params) => {
-    const result = await apiGetData('GET', `erp/v1/order/${params.orderId}`)
+    const result = await apiGetData('GET', `/erp/v1/order/${params.orderId}`)
     return result
 }
 

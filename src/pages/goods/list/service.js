@@ -20,3 +20,9 @@ export const reqGoodsState = async (params) => {
   const result = await apiGetData('PUT', `/erp/v1/product/status`,params)
   return result
 }
+
+// 获取商品日志
+export const reqGoodsLog =async (skuId,params) => {
+  const result = await apiGetData('GET', `/erp/v1/product/log/${skuId}`,params)
+  return result
+}

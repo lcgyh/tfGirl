@@ -1,6 +1,6 @@
 import apiGetData from '@/utils/apiMeth'
 
-
+// 分类类表搜索查询
 export const reqCategoryListData = async (params) => {
   const result = await apiGetData('GET', `/erp/v1/category/list`, params)
   return result
@@ -17,10 +17,13 @@ export const reqCategoryFirstList = async (params) => {
   return result
 }
 
+// 一级分类新建
 export const reqCategoryFirstCreate = async (params) => {
   const result = await apiGetData('POST', `/erp/v1/category/first/add`, params)
   return result
 }
+
+// 一级分类更新
 export const reqCategoryFirstUpdate = async (params) => {
   const result = await apiGetData('POST', `/erp/v1/category/first/update`, params)
   return result

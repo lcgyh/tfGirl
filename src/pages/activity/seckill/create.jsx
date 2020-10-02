@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment'
 import { resSkillInfo, reqEditSkill } from './service'
 import {reqGoodsInfo} from  '../../goods/list/service'
-import {getColumns} from './config'
+import {getGoodsColumnInfo} from './config'
 import styles from './style.less';
 
 const { RangePicker } = DatePicker;
@@ -160,7 +160,8 @@ const CreateBanner = () => {
           
           <Table
           dataSource={skus}
-          columns={getColumns(spuInfo.specId1Str,spuInfo.specId2Str)}
+          // columns={getColumns(spuInfo.specId1Str,spuInfo.specId2Str)}
+          columns={getGoodsColumnInfo(!spuInfo.specId2 ? 'specAttrId2' : null)}
           bordered
           pagination={false}
         />

@@ -5,24 +5,23 @@ import {
   Table,
   Space,
   Button,
-  Descriptions,
   Form,
   Input,
-  Checkbox,
   Select,
   message,
 } from 'antd';
-import { cloneDeep } from 'lodash';
+import { cloneDeep ,uniqBy} from 'lodash';
 import { useHistory, useParams } from 'react-router-dom';
 import PicturesWall from '@/components/Upload';
 import DeleteDes from './components/deleteDes';
-import { orderStates, goodsColumn, getGoodsColumn } from './config';
+import {  getGoodsColumn } from './config';
 import { reqGoodsEdit, reqGoodsInfo } from './service'
 import { reqProductSpecList, reqSpecAttrList, reqSpecAttrEdit } from '../specs/service'
 import EditableTagGroup from './components/tag'
 import { reqBrandList } from '../brand/service'
 import { reqCategoryFirstList, reqCategorySecondList } from '../classify/service'
 import { reqCountryData } from '../country/service'
+
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -41,9 +40,7 @@ const tailLayout = {
 };
 
 const CreateGoods = () => {
-
   const params = useParams();
-  console.log('params--', params)
   const { spuId } = params
   const history = useHistory();
   const [form] = Form.useForm();
@@ -68,6 +65,91 @@ const CreateGoods = () => {
   })
 
 
+  const getGoodsDatas=async ()=>{
+    const para=[
+      reqBrandList(),
+      reqProductSpecList(),
+      reqCountryData(),
+      reqCategoryFirstList()
+    ]
+    
+    if(spuId){
+      para.push(reqGoodsInfo({spuId})) 
+    }
+   
+    const result =await Promise.all(para)
+    const bannerResult = result[0]
+    const specResult = result[1]
+    const countryResult = result[2]
+    const categoryResult = result[3]
+    const goosInfoResult = result[4]?result[4]:{}
+    setBrandList(bannerResult || [])
+    const { specs = [] } = specResult
+    const newSpecs1 = cloneDeep(specs)
+    const newSpecs2 = cloneDeep(specs)
+    for (let i = 0; i < newSpecs1.length; i++) {
+      newSpecs1[i].disabled = false
+    }
+    for (let i = 0; i < newSpecs2.length; i++) {
+      newSpecs2[i].disabled = false
+    }
+    setFirstSpecList(newSpecs1)
+    setSecondSpecList(newSpecs2)
+    setCountData(countryResult)
+    setCategoryFirst(categoryResult || [])
+    if(spuId){
+      const { pdSkus, pdSpu } = goosInfoResult
+      const {categoryId1} = pdSpu
+      const par = { parentCategoryId: categoryId1 }
+      const categorySecond = await reqCategorySecondList(par)
+      setCategorySecond(categorySecond || [])
+      for (let i = 0; i < newSpecs1.length; i++) {
+        if(newSpecs1[i].specId===pdSpu.specId2){
+          newSpecs1[i].disabled = true
+        }else{
+          newSpecs1[i].disabled = false
+        }
+      }
+      for (let i = 0; i < newSpecs2.length; i++) {
+        if(newSpecs2[i].specId===pdSpu.specId1){
+          newSpecs2[i].disabled = true
+        }else{
+          newSpecs2[i].disabled = false
+        }
+      }
+      setFirstSpecList(newSpecs1)
+      setSecondSpecList(newSpecs2)
+
+      form.setFieldsValue({
+        spuName: pdSpu.spuName,
+        spuBrandId: pdSpu.spuBrandId,
+        countryId: pdSpu.countryId,
+        categoryId1: pdSpu.categoryId1,
+        categoryId2: pdSpu.categoryId2,
+        spuSellingPoint: pdSpu.spuSellingPoint,
+        spuSellingPoingStr: pdSpu.spuSellingPoingStr,
+        specId1: pdSpu.specId1,
+        specId2: pdSpu.specId2,
+      });
+  
+      const imgs = pdSpu.spuPics.map((item, index) => {
+        return {
+          uid: `${item}${index}`,
+          status: 'done',
+          url: item
+        }
+      })
+      setFileImgs(imgs)
+      setGoodsDes(pdSpu.spuDetail || [])
+      setFormData({
+        ...formData,
+        specId1: pdSpu.specId1,
+        specId2:pdSpu.specId2,
+        changeDataSouse:false
+      })
+      setDataSource(pdSkus)
+    }
+  }
 
   const addKey = (list) => {
     const arr = list
@@ -87,15 +169,27 @@ const CreateGoods = () => {
     })
     if (spuPics.length < 1) return message.error('请上传商品图片')
     if (dataSource.length < 1) return message.error('请设置商品信息')
+
+
     const dataSourceValueErr = dataSource.filter((item) => {
       return !item.specAttrId1 || !item.specAttrId2 || !item.skuBarCode || !item.skuRetailPrice
     })
     if (dataSourceValueErr.length > 0) return message.error('商品信息不完整')
 
+    const dataSourceValueErr1 = uniqBy(dataSource,(value)=>{
+      return value.skuBarCode
+    })
+    if(dataSourceValueErr1.length !== dataSource.length)return message.error('存在相同的商品条码')
+    const dataSourceValueErr2 = uniqBy(dataSource,(value)=>{
+      return `${value.specAttrId1}${value.specAttrId2}`
+    })
+    if(dataSourceValueErr2.length !== dataSource.length)return message.error('存在相同的商品规格')
     const spuDetail = goodsDes.filter((item) => {
       return item.value
     })
     if (spuDetail.length < 1) return message.error('请至少设置一组详情')
+
+
     const param = {
       ...values,
       spuPics,
@@ -103,17 +197,17 @@ const CreateGoods = () => {
       spuDetail,
       opType: '1'
     }
+
+    if(spuId){
+      param.spuId = spuId
+      param.opType = '2'
+    }
     await reqGoodsEdit(param)
     goBack()
     message.success('操作成功')
   };
 
-  const getCountData = async () => {
-    const result = await reqCountryData()
-    setCountData(result)
-  }
-
-
+  
   const addDes = (type) => {
     const list = cloneDeep(goodsDes);
     list.push({
@@ -149,63 +243,11 @@ const CreateGoods = () => {
     setGoodsDes(list);
   };
 
-
-  const getGoodsInfo = async (data) => {
-    const par = { spuId: data }
-    const result = await reqGoodsInfo(par)
-    const { pdSkus, pdSpu } = result
-    form.setFieldsValue({
-      spuName: pdSpu.spuName,
-      spuBrandId: pdSpu.spuBrandId,
-      countryId: pdSpu.countryId,
-      categoryId1: pdSpu.categoryId1,
-      categoryId2: pdSpu.categoryId2,
-      spuSellingPoint: pdSpu.spuSellingPoint,
-      spuSellingPoingStr: pdSpu.spuSellingPoingStr,
-      specId1: pdSpu.specId1,
-      specId2: pdSpu.specId2,
-    });
-
-    const imgs = pdSpu.spuPics.map((item, index) => {
-      return {
-        uid: `${item}${index}`,
-        status: 'done',
-        url: item
-      }
-    })
-    setFileImgs(imgs)
-    setGoodsDes(pdSpu.spuDetail || [])
-    setFormData({
-      ...formData,
-      specId1: pdSpu.specId1,
-      specId2:pdSpu.specId2,
-      changeDataSouse:false
-    })
-    setDataSource(pdSkus)
-  }
-
-  const getSpecList = async () => {
-    const result = await reqProductSpecList()
-    const { specs = [] } = result
-    const newSpecs1 = cloneDeep(specs)
-    const newSpecs2 = cloneDeep(specs)
-    for (let i = 0; i < newSpecs1.length; i++) {
-      newSpecs1[i].disabled = false
-    }
-    for (let i = 0; i < newSpecs2.length; i++) {
-      newSpecs2[i].disabled = false
-    }
-    setFirstSpecList(newSpecs1)
-    setSecondSpecList(newSpecs2)
-
-  }
   const getSpecAttrs = async (id, type, changeDataSouse) => {
-    console.log('getSpecAttrs')
-    console.log('changeDataSouse',changeDataSouse)
-    console.log('type',type)
     if (!id) return
     const result = await reqSpecAttrList(id)
     if (type === '1') {
+      console.log('result--',result)
       setFirstSpecAttrList(result)
       if (changeDataSouse) {
         const newDataSource = cloneDeep(dataSource)
@@ -228,27 +270,6 @@ const CreateGoods = () => {
     }
   }
 
-
- 
-
-
-  useEffect(() => {
-    console.log('formData.specId1')
-    if (formData.specId1) {
-      getSpecAttrs(formData.specId1, '1', formData.changeDataSouse)
-    }
-  }, [formData.specId1])
-
-  useEffect(() => {
-    getSpecAttrs(formData.specId2, '2', formData.changeDataSouse)
-  }, [formData.specId2])
-
-  useEffect(() => {
-    if (spuId) {
-      getGoodsInfo(spuId)
-    }
-  }, [spuId])
-
   const addSkuItem = () => {
     if (!formData.specId1) return message.error('请选择商品规格1后再执行新增操作')
     const newDataSource = cloneDeep(dataSource)
@@ -262,34 +283,6 @@ const CreateGoods = () => {
     })
     setDataSource(addKey(result))
   }
-  // 获取品牌列表
-  const getBrandList = async () => {
-    const result = await reqBrandList()
-    setBrandList(result || [])
-  }
-
-  // 获取一级分类列表
-  const getClassFirstList = async () => {
-    const result = await reqCategoryFirstList()
-    setCategoryFirst(result || [])
-
-  }
-
-
-  // 获取二级分类列表
-  const getClassSecondList = async (value) => {
-    const par = { parentCategoryId: value }
-    const result = await reqCategorySecondList(par)
-    setCategorySecond(result || [])
-  }
-  useEffect(() => {
-    getBrandList()
-    getSpecList()
-    getCountData()
-    getClassFirstList()
-  }, [])
-
-
   const formChange = (e, key, changeDataSouse) => {
     const value = e && e.target ? e.target.value : e
     const newSecondSpecList = cloneDeep(secondSpecList)
@@ -401,8 +394,23 @@ const CreateGoods = () => {
     const list = cloneDeep(goodsDes);
     list[index].value = value
     setGoodsDes(list);
-
   }
+
+
+  useEffect(() => {
+    getGoodsDatas()
+  }, [spuId])
+
+  useEffect(() => {
+    if (formData.specId1) {
+      getSpecAttrs(formData.specId1, '1', formData.changeDataSouse)
+    }
+  }, [formData.specId1])
+
+  useEffect(() => {
+    getSpecAttrs(formData.specId2, '2', formData.changeDataSouse)
+  }, [formData.specId2])
+  
 
   return (
     <PageContainer>
@@ -593,6 +601,7 @@ const CreateGoods = () => {
             <Table dataSource={dataSource.map((item, index) => {
               return {
                 ...item,
+                key:index,
                 deleteSku,
                 firstSpecAttrList,
                 secondSpecAttrList,
@@ -633,7 +642,7 @@ const CreateGoods = () => {
             <div style={{ marginTop: '20px' }}>
               {goodsDes.map((item, index) => {
                 return (
-                  <div style={{ marginBottom: '10px' }}>
+                  <div style={{ marginBottom: '10px' }} key={index}>
                     {item.type === '1' ? (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <TextArea placeholder="请输入"

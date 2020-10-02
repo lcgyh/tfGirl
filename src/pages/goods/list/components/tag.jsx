@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import React, { useState, useEffect,useRef } from 'react';
 
 const EditableTagGroup=(props)=>{
-  const {list=[],deleteSpecAttr,addSpecAttr,type,specId} =props
+  const {list=[],deleteSpecAttr,addSpecAttr,type,specId,isNotCanEdit} =props
 
   const [tags,setTags] =useState([])
   const [inputVisible,setInputVisible] =useState(false)
@@ -12,7 +12,6 @@ const EditableTagGroup=(props)=>{
   const saveInputRef = useRef()
 
   const handleClose = (removedTag,e) => {
-    console.log('removedTag--',removedTag)
     deleteSpecAttr(e,removedTag,type)
   };
 
@@ -20,7 +19,6 @@ const EditableTagGroup=(props)=>{
     setInputVisible(true)
   }
   useEffect(()=>{
-    console.log('saveInputRef',saveInputRef)
     if(inputVisible){
       saveInputRef.current.focus()
     }
@@ -28,8 +26,7 @@ const EditableTagGroup=(props)=>{
 
 
   useEffect(()=>{
-    console.log('list--',list)
-    if(list && list.length>0){
+    if(list){
       setTags(list)
     }
   },[list])
@@ -56,7 +53,6 @@ const EditableTagGroup=(props)=>{
       message.error('请输入格式正确的不重复的属性值')
     }
   };
-  console.log('tags--',tags)
   return (
     <>
       {tags.map((tag, index) => {
@@ -65,7 +61,7 @@ const EditableTagGroup=(props)=>{
         const tagElem = (
           <Tag
             key={tagName}
-            closable={tags.length>1}
+            closable={!isNotCanEdit && tags.length>1}
             onClose={(e) => handleClose(tag,e)}
           >
             <span>
@@ -92,9 +88,11 @@ const EditableTagGroup=(props)=>{
           onBlur={handleInputConfirm}
           onPressEnter={handleInputConfirm}
           style={{width:'100px'}}
+         
+
         />
       )}
-      {!inputVisible && (
+      {!isNotCanEdit && !inputVisible && (
         <Tag className="site-tag-plus" onClick={showInput}>
           <PlusOutlined /> 新建
         </Tag>

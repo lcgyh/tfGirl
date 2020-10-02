@@ -102,7 +102,7 @@ export default defineConfig({
                   hideInMenu: true,
                 },
                 {
-                  path: '/goods/log/:spuId',
+                  path: '/goods/log/:skuId',
                   name: 'goodsLog',
                   component: './goods/list/log',
                   hideInMenu: true,

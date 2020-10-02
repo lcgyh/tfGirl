@@ -11,7 +11,7 @@ const OrderStoreInfo = () => {
   const { orderId } = params
   const [orderInfo, setOrderInfo] = useState({})
   const getOrderInfo = async () => {
-    const result = await reqOrderInfo(params)
+    const result = await reqOrderInfo({orderId})
     setOrderInfo(result)
   }
   useEffect(() => {

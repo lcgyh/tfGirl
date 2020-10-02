@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, Input, message,Radio } from 'antd';
 import FormItemBySelf from '../../../../components/formItemBySelf';
 import {reqCategoryFirstCreate,reqCategoryFirstUpdate} from '../service'
 
 const Delivery = (props) => {
-  const { visibleData, setVisibleData,getDataList,setFormData } = props;
+  const { visibleData, setVisibleData,setFormData } = props;
   const { record, visible } = visibleData;
   const handleOk =async () => {
     if (!record.categoryName) return message.error('请输入一级分类名称');
@@ -13,9 +13,7 @@ const Delivery = (props) => {
     }else{
       await reqCategoryFirstCreate(record)
     }
-    await setFormData({})
-    console.log(123)
-    getDataList()
+    setFormData({ isSearch: true })
     setVisibleData({visible: false,record: {}});
   };
   const handleCancel = () => {
@@ -51,8 +49,8 @@ const Delivery = (props) => {
         <Radio.Group  onChange={(e) => {
               onChange(e, 'categoryStatus');
             }}  value={record.categoryStatus}>
-          <Radio value={1}>启用</Radio>
-          <Radio value={2}>禁用</Radio>
+          <Radio value='1'>启用</Radio>
+          <Radio value='2'>禁用</Radio>
         </Radio.Group>
         </FormItemBySelf>
       </Modal>

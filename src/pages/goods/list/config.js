@@ -207,26 +207,26 @@ const opaColumns = [{
 
 const logColumns = [{
     title: '操作类型',
-    dataIndex: 'addresss',
-    key: 'address14',
+    dataIndex: 'logOperate',
+    key: 'logOperate',
     align: 'center',
   },
   {
     title: '操作描述',
-    dataIndex: 'address141',
-    key: 'address141',
+    dataIndex: 'logRemark',
+    key: 'logRemark',
     align: 'center',
   },
   {
     title: '操作时间',
-    dataIndex: 'address142',
-    key: 'address142',
+    dataIndex: 'updateTime',
+    key: 'updateTime',
     align: 'center',
   },
   {
     title: '操作人',
-    dataIndex: 'address143',
-    key: 'address143',
+    dataIndex: 'logOperator',
+    key: 'logOperator',
     align: 'center',
   },
 ];
@@ -339,6 +339,68 @@ const goodsColumn=[
       }
     ]
 
+
+    const goodsColumnInfo=[
+      {
+        title: getSouTitle('商品规格1'),
+        dataIndex: 'specAttr1Str',
+        key: 'specAttr1Str',
+        align: 'center',
+        width:'15%',
+      },
+      {
+        title: getSouTitle('商品规格2'),
+        dataIndex: 'specAttr2Str',
+        key: 'specAttr2Str',
+        align: 'center',
+        width:'15%',
+      },
+      {
+        title: getSouTitle('商品条码'),
+        dataIndex: 'skuBarCode',
+        key: 'skuBarCode',
+        align: 'center',
+        width:'15%',
+      },
+      {
+        title: '供货价',
+        dataIndex: 'skuSupplyPrice',
+        key: 'skuSupplyPrice',
+        align: 'center',
+        width:'15%',
+      },
+      {
+        title: getSouTitle('零售价'),
+        dataIndex: 'skuRetailPrice',
+        key: 'skuRetailPrice',
+        align: 'center',
+        width:'15%',
+      },
+      {
+        title: '商品图片',
+        dataIndex: 'skuPic',
+        key: 'skuPic',
+        width:'25%',
+        align: 'center',
+        render:(text,record,index)=>{
+          return <PicturesWall
+            disabled={true}
+            fileImgs={ text? [{
+              url:text,
+              uid: '-1',
+              status: 'done',
+            }]:[]}
+              getFileListData={(data)=>record.getDatasouceFileList(index,data)}
+              imgLength={1}
+          />
+        }
+
+      }
+    
+    ]
+
+
+
 const getGoodsColumn=(col)=>{
   if(col){
     const result = goodsColumn.filter((item)=>{
@@ -349,7 +411,15 @@ const getGoodsColumn=(col)=>{
   return goodsColumn
 }
 
-
+const getGoodsColumnInfo=(col)=>{
+  if(col){
+    const result = goodsColumnInfo.filter((item)=>{
+      return item.dataIndex !==col
+    })
+    return result
+  }
+  return goodsColumnInfo
+}
 
 
 
@@ -367,5 +437,7 @@ export {
   spuStatusOpation,
   skuStatusOpation,
   goodsColumn,
-  getGoodsColumn
+  getGoodsColumn,
+  goodsColumnInfo,
+  getGoodsColumnInfo
 };

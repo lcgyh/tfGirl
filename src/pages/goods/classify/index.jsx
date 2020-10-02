@@ -10,7 +10,7 @@ import {reqCategoryListData} from './service'
 
 
 const OrderByStore = () => {
-  const [formData,setFormData] = useState({})
+  const [formData,setFormData] = useState({ isSearch: false })
   const [dataSource, setDataSource] = useState([]);
   const [visibleData, setVisibleData] = useState({
     visible: false,
@@ -22,7 +22,13 @@ const OrderByStore = () => {
   });
   const initData={
     categoryName:null,
-    categoryStatus:1
+    categoryStatus:'1',
+  }
+  const initAttrData={
+    categoryName:null,
+    categoryStatus:'1',
+    parentCategoryId:null,
+    categoryLogo:null,
   }
 
   // 查询列表
@@ -31,6 +37,10 @@ const OrderByStore = () => {
       ...formData,
     };
     const result =await reqCategoryListData(param)
+    setFormData({
+      ...formData,
+      isSearch: false
+    })
     setDataSource(result || [])
   };
   const onChange = (e,key) => {
@@ -40,9 +50,14 @@ const OrderByStore = () => {
     });
   };
   useEffect(() => {
-    getDataList()
+    if (formData && formData.isSearch) {
+      getDataList()
+    }
+  }, [formData]);
+  
+  useEffect(() => {
+    setFormData({ isSearch: true })
   }, []);
-
   
   return (
     <PageContainer>
@@ -76,7 +91,7 @@ const OrderByStore = () => {
         </Button>
         <Button
           onClick={() => {
-            setFormData({});
+            setFormData({ isSearch: false });
           }}
         >
           重置
@@ -91,7 +106,7 @@ const OrderByStore = () => {
               <Button type="primary" onClick={() => setVisibleData({ visible: true, record: initData })}>
                 新增一级分类
               </Button>
-              <Button type="primary" onClick={() => setVisibleSecondData({ visible: true, record: initData })}>新增二级分类</Button>
+              <Button type="primary" onClick={() => setVisibleSecondData({ visible: true, record: initAttrData })}>新增二级分类</Button>
             </Space>
           </div>
         }

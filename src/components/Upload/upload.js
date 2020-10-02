@@ -14,18 +14,17 @@ const PicturesWall = (props) => {
 
     const handleChange = (files) => {
         if(!files.file.status) return
-        setFileList(files.fileList);
+        setFileList(files.fileList.filter((item)=>{
+          return item.status && item.status !== "" 
+        }));
         if (files.file.status === 'done') {
           const newFileList = cloneDeep(files.fileList)
-          const result = newFileList.filter((item)=>{
-            return item.type && item.type !== "" 
-          })
-          for (let i = 0; i < result.length; i++) {
-            if (result[i].response && result[i].response.code === 0  ) {
-              result[i].url = result[i].response.data;
+          for (let i = 0; i < newFileList.length; i++) {
+            if (newFileList[i].response && newFileList[i].response.code === 0  ) {
+              newFileList[i].url = newFileList[i].response.data;
             }
           }
-          getFileListData(result);
+          getFileListData(newFileList);
         }
         if (files.file.status === 'removed'){
           const newFileList = cloneDeep(files.fileList)
@@ -69,6 +68,7 @@ const PicturesWall = (props) => {
     return (
         <>
             <Upload
+                {...props}
                 beforeUpload={beforeUpload}
                 fileList={fileList}
                 customRequest={customUpRequest}
