@@ -2,16 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Modal, message ,InputNumber } from 'antd';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 import FormItemBySelf from '../../../../components/formItemBySelf';
-import {reqSpecEdit} from '../service'
+import {expressEdit} from '../service'
 
 const DeliveryAttr = (props) => {
   const { visibleData, setVisibleData,getDataList } = props;
   const { record={}, visible } = visibleData;
 
   const handleOk =async () => {
-    if (!record.specId) return message.error('请选择规格名称');
-    if (!record.specAttrName) return message.error('请输入规格值名称');
-    await reqSpecEdit(record)
+    console.log('record',record)
+    if (!record.expressPrice) return message.error('请输入邮费费用');
+    const params={
+      expressFeeId:record.expressFeeId,
+      expressPrice:record.expressPrice,
+      opType:record.opType,
+      provinceId:record.provinceId,
+    }
+    await expressEdit(params)
     getDataList()
     setVisibleData({visible: false,record: {}});
   };
@@ -33,10 +39,6 @@ const DeliveryAttr = (props) => {
     });
   };
 
-
-  console.log('visibleData--',visibleData)
-
-
   return (<div>
       <Modal 
         title="修改运费" 
@@ -47,9 +49,9 @@ const DeliveryAttr = (props) => {
             {record.provinceName}
         </FormItemBySelf>
         <FormItemBySelf label="邮寄费用" width="120">
-          <InputNumber  value={record.money}
+          <InputNumber  value={record.expressPrice}
             onChange={(e) => {
-              onChange(e, 'money');
+              onChange(e, 'expressPrice');
             }}
             placeholder="请输入"
             style={{ width: '280px' }}

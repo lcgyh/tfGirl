@@ -4,7 +4,7 @@ import { Card, Space, Button ,Input} from 'antd';
 import DeliveryAttr from './components/deliveryAttr'
 import styles from './style.less';
 import BlockList from './components/list';
-import {reqProvinceListData} from './service'
+import {reqExpressFeeListData} from './service'
 
 const OrderByStore = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -15,7 +15,7 @@ const OrderByStore = () => {
 
   // 查询列表
   const getDataList =async () => {
-    const result = await reqProvinceListData()
+    const result = await reqExpressFeeListData()
     setDataSource(result || [])
   };
   

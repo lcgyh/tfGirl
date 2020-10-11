@@ -36,7 +36,7 @@ export const columns = [
     dataIndex: 'opa',
     key: 'opa',
     align: 'center',
-    render:()=><span className='click_text' onClick={(text,record)=>{record.goEdit(record)}}>操作</span>
+    render:(text,record)=><span className='click_text' onClick={()=>{record.goEdit(record)}}>操作</span>
   }];
 
 

@@ -70,6 +70,7 @@ const CreateBanner = () => {
       <Card>
         <Form {...layout}
           name="basic"
+          form={form}
           onFinish={onFinish}
         >
           <Form.Item

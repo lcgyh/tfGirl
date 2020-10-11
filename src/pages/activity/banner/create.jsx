@@ -29,6 +29,7 @@ const CreateBanner = () => {
   const { bannerId } = params
   const [opType, setOpType] = useState(1)
   const [fileImgs, setFileImgs] = useState([]);
+  const [linkTypeSelect, setLinkTypeSelect] = useState('1');
 
 
   const goBack = () => {
@@ -62,6 +63,7 @@ const CreateBanner = () => {
       bannerRank: result.bannerRank,
       spuId: result.spuId,
       roomId: result.roomId,
+      linkType:result.spuId?'1':(result.roomId?'2':'1'),
     });
 
     if (result.bannerPic) {
@@ -73,10 +75,8 @@ const CreateBanner = () => {
     }
   }
 
-  const formChange = (e, key) => {
-    form.setFieldsValue({
-      [key]: e && e.target ? e.target.value : e
-    });
+  const formChange = (e) => {
+    setLinkTypeSelect(e.target.value)
   }
 
   const getFileListData = (data) => {
@@ -93,6 +93,7 @@ const CreateBanner = () => {
       <Card>
         <Form {...layout}
           name="basic"
+          form={form}
           onFinish={onFinish}
         >
           <Form.Item
@@ -141,33 +142,37 @@ const CreateBanner = () => {
           </Form.Item>
           <Form.Item
             label="链接类型"
-            name="password"
-            onChange={(e) => { formChange(e, 'password') }}
+            name="linkType"
+            onChange={(e) => { formChange(e) }}
             rules={[{ required: true, message: '请选择banner链接类型' }]}
-            initialValue={1}
+            initialValue='1'
           >
             <Radio.Group >
-              <Radio value={1}>商品</Radio>
-              <Radio value={2}>直播</Radio>
+              <Radio value='1'>商品</Radio>
+              <Radio value='2'>直播</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
+          {
+            linkTypeSelect==='1'? <Form.Item
             label="SPUID"
             name="spuId"
             rules={[{ required: true, message: '请输入SPUID' }]}
-          >
-            <Input
-              placeholder="请输入"
-              onChange={(e) => { formChange(e, 'spuId') }} />
-          </Form.Item>
-          <Form.Item
+            >
+            <Input placeholder="请输入"/>
+            </Form.Item>:null
+          }
+          {
+            linkTypeSelect==='2'?
+            <Form.Item
             label="直播间ID"
             name="roomId"
             rules={[{ required: true, message: '请输入直播间ID' }]}
           >
-            <Input placeholder="请输入"
-              onChange={(e) => { formChange(e, 'roomId') }} />
-          </Form.Item>
+            <Input placeholder="请输入" />
+          </Form.Item>:null
+          }
+         
+          
           <Form.Item {...tailLayout} >
             <Button
               type="primary"

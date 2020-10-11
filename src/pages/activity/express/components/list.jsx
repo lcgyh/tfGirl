@@ -10,7 +10,10 @@ const Block = (props) => {
                 visible: true,
                 record: {
                     provinceName: info.provinceName,
-                    money: info.money || 0
+                    expressFeeId: info.expressFeeId,
+                    expressPrice: info.expressPrice || 0,
+                    provinceId:info.provinceId,
+                    opType:'2'
                 }
             }
         )

@@ -1,3 +1,7 @@
+
+import React, {useState,useEffect} from 'react';
+import { Card, Button, Form, Input, message, Radio ,DatePicker,Table,InputNumber} from 'antd';
+
 const skillStatusList = [{
     name: '展示',
     value: '1',
@@ -217,11 +221,14 @@ const goodsColumnInfo=[
     width:'15%',
   },
   {
-    title: '商品图片',
-    dataIndex: 'skuPic',
-    key: 'skuPic',
+    title: '折扣价格',
+    dataIndex: 'skillPrice',
+    key: 'skillPrice',
     width:'25%',
     align: 'center',
+    render:(text,record,index)=>{
+      return <InputNumber value={text || '0'} onChange={(e)=>{record.skillPriceChnage(e,index)}}/>
+    }
   }
 
 ]

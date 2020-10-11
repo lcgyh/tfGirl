@@ -3,6 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Button, Form, Input, message, Radio ,DatePicker,Table} from 'antd';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment'
+import { cloneDeep } from 'lodash';
 import { resSkillInfo, reqEditSkill } from './service'
 import {reqGoodsInfo} from  '../../goods/list/service'
 import {getGoodsColumnInfo} from './config'
@@ -44,13 +45,19 @@ const CreateBanner = () => {
 
   const onFinish = async (values) => {
     
-    
-    const data = {
-      ...values,
-      opType
+    const data={
+      skillName:values.skillName,
+      skillStatus:values.skillStatus,
+      startTime:moment(values.skillDate[0]).format('YYYY-MM-DD HH:mm'),
+      endTime:moment(values.skillDate[1]).format('YYYY-MM-DD HH:mm'),
+      opType:'1',
+      spuId,
+      skus
     }
+
     if (opType === 2) {
       data.skillId = skillId
+      data.opType = '2'
     }
     await reqEditSkill(data)
     goBack()
@@ -60,12 +67,15 @@ const CreateBanner = () => {
   const getSkillInfo = async () => {
     const result = await resSkillInfo(params)
     setOpType(2)
+    getGoodsSpuInfo(result.spuId)
     form.setFieldsValue({
       skillName: result.skillName,
       skillStatus: result.skillStatus,
       skillDate: [moment(result.startTime).valueOf(),moment(result.endTime).valueOf()],
     });
     setSkus(result.skus)
+    setSpuId(result.spuId)
+    
   }
 
   const formChange = (e, key) => {
@@ -80,12 +90,26 @@ const CreateBanner = () => {
     const {pdSkus,pdSpu} = result
     setSkus(pdSkus)
     setSpuInfo(pdSpu)
+
+  }
+
+  const getGoodsSpuInfo=async (spuId)=>{
+    if(!spuId) return
+    const result = await reqGoodsInfo({spuId})
+    const {pdSpu} = result
+    setSpuInfo(pdSpu)
   }
 
   useEffect(() => {
     if (!skillId) return
     getSkillInfo()
   }, [skillId])
+
+  const skillPriceChnage=(value,index)=>{
+    const newDatadouce= cloneDeep(skus)
+    newDatadouce[index].skillPrice=value
+    setSkus(newDatadouce)
+  }
 
   return (
     <PageContainer >
@@ -159,8 +183,9 @@ const CreateBanner = () => {
             </div>
           
           <Table
-          dataSource={skus}
-          // columns={getColumns(spuInfo.specId1Str,spuInfo.specId2Str)}
+          dataSource={skus.map((item)=>{
+            return {...item,skillPriceChnage}
+          })}
           columns={getGoodsColumnInfo(!spuInfo.specId2 ? 'specAttrId2' : null)}
           bordered
           pagination={false}
